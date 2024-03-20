@@ -8,6 +8,8 @@
 #include <string.h>
 #include <poll.h>
 #include <fcntl.h>
+#include <xf86drm.h>
+#include <sys/eventfd.h>
 
 #include <linux/input-event-codes.h>
 
@@ -23,6 +25,7 @@
 #include <wlr/backend/multi.h>
 #include <wlr/interfaces/wlr_keyboard.h>
 #include <wlr/render/wlr_renderer.h>
+#include <wlr/render/timeline.h>
 #include <wlr/types/wlr_compositor.h>
 #include <wlr/types/wlr_keyboard.h>
 #include <wlr/types/wlr_pointer.h>
@@ -32,6 +35,7 @@
 #include <wlr/xwayland/server.h>
 #include <wlr/types/wlr_xdg_shell.h>
 #include <wlr/types/wlr_relative_pointer_v1.h>
+#include <wlr/types/wlr_linux_drm_syncobj_v1.h>
 #include "wlr_end.hpp"
 
 #include "gamescope-xwayland-protocol.h"
@@ -95,6 +99,73 @@ std::vector<ResListEntry_t>& gamescope_xwayland_server_t::retrieve_commits()
 	return commits;
 }
 
+void GamescopeTimelinePoint::Release()
+{
+	assert( wlserver_is_lock_held() );
+
+	drmSyncobjTimelineSignal( pTimeline->drm_fd, &pTimeline->handle, &ulPoint, 1 );
+	wlr_render_timeline_unref( pTimeline );
+}
+
+//
+// Fence flags tl;dr
+// 0                                      -> Wait for signal on a materialized fence, -ENOENT if not materialized
+// DRM_SYNCOBJ_WAIT_FLAGS_WAIT_AVAILABLE  -> Wait only for materialization
+// DRM_SYNCOBJ_WAIT_FLAGS_WAIT_FOR_SUBMIT -> Wait for materialization + signal
+//
+
+static std::optional<GamesopeAcquireTimelineState> TimelinePointToEventFd( const GamescopeTimelinePoint &point )
+{
+	uint32_t uFirstSignalled = 0;
+	int nRet = drmSyncobjTimelineWait( point.pTimeline->drm_fd, &point.pTimeline->handle, (uint64_t*)&point.ulPoint, 1u, 0u, DRM_SYNCOBJ_WAIT_FLAGS_WAIT_AVAILABLE, &uFirstSignalled );
+	if ( nRet != 0 && nRet != -ETIME )
+	{
+		wl_log.errorf( "Failed to test if explicit sync object was submitted" );
+		return std::nullopt;
+	}
+
+	uint64_t uSignalledPoint = 0;
+	nRet = drmSyncobjQuery( point.pTimeline->drm_fd, &point.pTimeline->handle, &uSignalledPoint, 1u );
+	if ( nRet != 0 )
+	{
+		wl_log.errorf( "Failed to query syncobj" );
+		return std::nullopt;
+	}
+
+	if ( uSignalledPoint >= point.ulPoint )
+	{
+		return GamesopeAcquireTimelineState{ -1, true };
+	}
+	else
+	{
+		int32_t nExplicitSyncEventFd = eventfd( 0, EFD_CLOEXEC );
+		if ( nExplicitSyncEventFd < 0 )
+		{
+			wl_log.errorf( "Failed to create eventfd" );
+			return std::nullopt;
+		}
+
+		drm_syncobj_eventfd syncobjEventFd =
+		{
+			.handle = point.pTimeline->handle,
+			// Only valid flags are: DRM_SYNCOBJ_WAIT_FLAGS_WAIT_AVAILABLE
+			// -> Wait for fence materialization rather than signal.
+			.flags  = 0u,
+			.point  = point.ulPoint,
+			.fd     = nExplicitSyncEventFd,
+		};
+
+		if ( drmIoctl( point.pTimeline->drm_fd, DRM_IOCTL_SYNCOBJ_EVENTFD, &syncobjEventFd ) != 0 )
+		{
+			wl_log.errorf_errno( "DRM_IOCTL_SYNCOBJ_EVENTFD failed" );
+			close( nExplicitSyncEventFd );
+			return std::nullopt;
+		}
+
+		return GamesopeAcquireTimelineState{ nExplicitSyncEventFd, false };
+	}
+}
+
 void gamescope_xwayland_server_t::wayland_commit(struct wlr_surface *surf, struct wlr_buffer *buf)
 {
 	{
@@ -103,6 +174,31 @@ void gamescope_xwayland_server_t::wayland_commit(struct wlr_surface *surf, struc
 		auto wl_surf = get_wl_surface_info( surf );
 
 		auto queue_mode = gamescope_commit_queue_v1_get_surface_mode(surf);
+
+		wlr_linux_drm_syncobj_surface_v1_state *pSyncState =
+			wlr_linux_drm_syncobj_v1_get_surface_state( wlserver.wlr.drm_syncobj_manager_v1, surf );
+
+		std::optional<GamesopeAcquireTimelineState> oAcquireState;
+		std::optional<GamescopeTimelinePoint> oReleasePoint;
+		if ( pSyncState )
+		{
+			GamescopeTimelinePoint acquirePoint =
+			{
+				.pTimeline = pSyncState->acquire_timeline,
+				.ulPoint   = pSyncState->acquire_point,
+			};
+			oAcquireState = TimelinePointToEventFd( acquirePoint );
+			if ( !oAcquireState )
+			{
+				return;
+			}
+
+			oReleasePoint = GamescopeTimelinePoint
+			{
+				.pTimeline = wlr_render_timeline_ref( pSyncState->release_timeline ),
+				.ulPoint   = pSyncState->release_point,
+			};
+		}
 
 		ResListEntry_t newEntry = {
 			.surf = surf,
@@ -113,6 +209,8 @@ void gamescope_xwayland_server_t::wayland_commit(struct wlr_surface *surf, struc
 			.presentation_feedbacks = std::move(wl_surf->pending_presentation_feedbacks),
 			.present_id = wl_surf->present_id,
 			.desired_present_time = wl_surf->desired_present_time,
+			.oAcquireState = oAcquireState,
+			.oReleasePoint = oReleasePoint,
 		};
 		wl_surf->present_id = std::nullopt;
 		wl_surf->desired_present_time = 0;
@@ -1702,6 +1800,9 @@ bool wlserver_init( void ) {
 	create_presentation_time();
 
 	commit_queue_manager_v1_create(wlserver.display);
+
+	int drm_fd = wlr_renderer_get_drm_fd( wlserver.wlr.renderer );
+	wlserver.wlr.drm_syncobj_manager_v1 = wlr_linux_drm_syncobj_manager_v1_create( wlserver.display, 1, drm_fd );
 
 	wlserver.relative_pointer_manager = wlr_relative_pointer_manager_v1_create(wlserver.display);
 	if ( !wlserver.relative_pointer_manager )
