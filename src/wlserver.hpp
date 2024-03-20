@@ -79,6 +79,7 @@ public:
 
 	struct wl_client *get_client();
 	struct wlr_output *get_output();
+	struct wlr_output_state *get_output_state();
 
 	void update_output_info();
 
@@ -86,7 +87,8 @@ private:
 	struct wlr_xwayland_server *xwayland_server = NULL;
 	struct wl_listener xwayland_ready_listener = { .notify = xwayland_ready_callback };
 
-	struct wlr_output *output;
+	struct wlr_output *output = nullptr;
+	struct wlr_output_state *output_state = nullptr;
 
 	std::map<uint32_t, wlserver_content_override *> content_overrides;
 

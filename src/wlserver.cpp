@@ -305,7 +305,7 @@ static void wlserver_handle_pointer_axis(struct wl_listener *listener, void *dat
 	struct wlserver_pointer *pointer = wl_container_of( listener, pointer, axis );
 	struct wlr_pointer_axis_event *event = (struct wlr_pointer_axis_event *) data;
 
-	wlr_seat_pointer_notify_axis( wlserver.wlr.seat, event->time_msec, event->orientation, event->delta, event->delta_discrete, event->source );
+	wlr_seat_pointer_notify_axis( wlserver.wlr.seat, event->time_msec, event->orientation, event->delta, event->delta_discrete, event->source, event->relative_direction );
 }
 
 static void wlserver_handle_pointer_frame(struct wl_listener *listener, void *data)
@@ -611,6 +611,11 @@ struct wl_client *gamescope_xwayland_server_t::get_client()
 struct wlr_output *gamescope_xwayland_server_t::get_output()
 {
 	return output;
+}
+
+struct wlr_output_state *gamescope_xwayland_server_t::get_output_state()
+{
+	return output_state;
 }
 
 
@@ -1392,7 +1397,8 @@ bool wlsession_init( void ) {
 	wlr_log_init(WLR_DEBUG, handle_wlr_log);
 
 	wlserver.display = wl_display_create();
-	wlserver.wlr.headless_backend = wlr_headless_backend_create( wlserver.display );
+	wlserver.event_loop = wl_display_get_event_loop( wlserver.display );
+	wlserver.wlr.headless_backend = wlr_headless_backend_create( wlserver.event_loop );
 
 	wl_display_set_global_filter(wlserver.display, filter_global, nullptr);
 
@@ -1405,7 +1411,7 @@ bool wlsession_init( void ) {
 	if ( !GetBackend()->IsSessionBased() )
 		return true;
 
-	wlserver.wlr.session = wlr_session_create( wlserver.display );
+	wlserver.wlr.session = wlr_session_create( wlserver.event_loop );
 	if ( wlserver.wlr.session == nullptr )
 	{
 		wl_log.errorf( "Failed to create session" );
@@ -1477,6 +1483,9 @@ gamescope_xwayland_server_t::gamescope_xwayland_server_t(wl_display *display)
 	wl_signal_add(&xwayland_server->events.ready, &xwayland_ready_listener);
 
 	output = wlr_headless_add_output(wlserver.wlr.headless_backend, 1280, 720);
+	output_state = new wlr_output_state;
+	wlr_output_state_init(output_state);
+
 	output->make = strdup("gamescope");  // freed by wlroots
 	output->model = strdup("gamescope"); // freed by wlroots
 	wlr_output_set_name(output, "gamescope");
@@ -1486,9 +1495,9 @@ gamescope_xwayland_server_t::gamescope_xwayland_server_t(wl_display *display)
 		refresh = g_nOutputRefresh;
 	}
 
-	wlr_output_enable(output, true);
-	wlr_output_set_custom_mode(output, g_nNestedWidth, g_nNestedHeight, refresh * 1000);
-	if (!wlr_output_commit(output))
+	wlr_output_state_set_enabled(output_state, true);
+	wlr_output_state_set_custom_mode(output_state, g_nNestedWidth, g_nNestedHeight, refresh * 1000);
+	if (!wlr_output_commit_state(output, output_state))
 	{
 		wl_log.errorf("Failed to commit headless output");
 		abort();
@@ -1496,7 +1505,7 @@ gamescope_xwayland_server_t::gamescope_xwayland_server_t(wl_display *display)
 
 	update_output_info();
 
-	wlr_output_create_global(output);
+	wlr_output_create_global(output, wlserver.display);
 }
 
 gamescope_xwayland_server_t::~gamescope_xwayland_server_t()
@@ -1513,6 +1522,7 @@ gamescope_xwayland_server_t::~gamescope_xwayland_server_t()
 	xwayland_server = nullptr;
 
 	wlr_output_destroy(output);
+	delete output_state;	
 }
 
 void gamescope_xwayland_server_t::update_output_info()
@@ -1641,9 +1651,7 @@ bool wlserver_init( void ) {
 
 	wl_list_init(&pending_surfaces);
 
-	wlserver.event_loop = wl_display_get_event_loop(wlserver.display);
-
-	wlserver.wlr.multi_backend = wlr_multi_backend_create(wlserver.display);
+	wlserver.wlr.multi_backend = wlr_multi_backend_create( wlserver.event_loop );
 	wlr_multi_backend_add( wlserver.wlr.multi_backend, wlserver.wlr.headless_backend );
 
 	assert( wlserver.event_loop && wlserver.wlr.multi_backend );
@@ -1653,7 +1661,7 @@ bool wlserver_init( void ) {
 	if ( GetBackend()->IsSessionBased() )
 	{
 #if HAVE_DRM
-		wlserver.wlr.libinput_backend = wlr_libinput_backend_create( wlserver.display, wlserver.wlr.session );
+		wlserver.wlr.libinput_backend = wlr_libinput_backend_create( wlserver.wlr.session );
 		if ( wlserver.wlr.libinput_backend == NULL)
 		{
 			return false;
@@ -1992,7 +2000,7 @@ void wlserver_mousebutton( int button, bool press, uint32_t time )
 {
 	assert( wlserver_is_lock_held() );
 
-	wlr_seat_pointer_notify_button( wlserver.wlr.seat, time, button, press ? WLR_BUTTON_PRESSED : WLR_BUTTON_RELEASED );
+	wlr_seat_pointer_notify_button( wlserver.wlr.seat, time, button, press ? WL_POINTER_BUTTON_STATE_PRESSED : WL_POINTER_BUTTON_STATE_RELEASED );
 	wlr_seat_pointer_notify_frame( wlserver.wlr.seat );
 }
 
@@ -2000,8 +2008,8 @@ void wlserver_mousewheel( double flX, double flY, uint32_t time )
 {
 	assert( wlserver_is_lock_held() );
 
-	wlr_seat_pointer_notify_axis( wlserver.wlr.seat, time, WLR_AXIS_ORIENTATION_HORIZONTAL, flX, flX * WLR_POINTER_AXIS_DISCRETE_STEP, WLR_AXIS_SOURCE_WHEEL );
-	wlr_seat_pointer_notify_axis( wlserver.wlr.seat, time, WLR_AXIS_ORIENTATION_VERTICAL, flY, flY * WLR_POINTER_AXIS_DISCRETE_STEP, WLR_AXIS_SOURCE_WHEEL );
+	wlr_seat_pointer_notify_axis( wlserver.wlr.seat, time, WL_POINTER_AXIS_HORIZONTAL_SCROLL, flX, flX * WLR_POINTER_AXIS_DISCRETE_STEP, WL_POINTER_AXIS_SOURCE_WHEEL, WL_POINTER_AXIS_RELATIVE_DIRECTION_IDENTICAL );
+	wlr_seat_pointer_notify_axis( wlserver.wlr.seat, time, WL_POINTER_AXIS_VERTICAL_SCROLL, flY, flY * WLR_POINTER_AXIS_DISCRETE_STEP, WL_POINTER_AXIS_SOURCE_WHEEL, WL_POINTER_AXIS_RELATIVE_DIRECTION_IDENTICAL );
 	wlr_seat_pointer_notify_frame( wlserver.wlr.seat );
 }
 
@@ -2184,7 +2192,7 @@ void wlserver_touchdown( double x, double y, int touch_id, uint32_t time )
 
 			if ( button != 0 && eMode < WLSERVER_BUTTON_COUNT )
 			{
-				wlr_seat_pointer_notify_button( wlserver.wlr.seat, time, button, WLR_BUTTON_PRESSED );
+				wlr_seat_pointer_notify_button( wlserver.wlr.seat, time, button, WL_POINTER_BUTTON_STATE_PRESSED );
 				wlr_seat_pointer_notify_frame( wlserver.wlr.seat );
 
 				wlserver.button_held[ eMode ] = true;
@@ -2210,7 +2218,7 @@ void wlserver_touchup( int touch_id, uint32_t time )
 
 				if ( button != 0 )
 				{
-					wlr_seat_pointer_notify_button( wlserver.wlr.seat, time, button, WLR_BUTTON_RELEASED );
+					wlr_seat_pointer_notify_button( wlserver.wlr.seat, time, button, WL_POINTER_BUTTON_STATE_RELEASED );
 					bReleasedAny = true;
 				}
 
@@ -2412,8 +2420,9 @@ void wlserver_set_xwayland_server_mode( size_t idx, int w, int h, int refresh )
 		return;
 
 	struct wlr_output *output = server->get_output();
-	wlr_output_set_custom_mode(output, w, h, refresh * 1000);
-	if (!wlr_output_commit(output))
+	struct wlr_output_state *output_state = server->get_output_state();
+	wlr_output_state_set_custom_mode(output_state, w, h, refresh * 1000);
+	if (!wlr_output_commit_state(output, output_state))
 	{
 		wl_log.errorf("Failed to commit headless output");
 		abort();
