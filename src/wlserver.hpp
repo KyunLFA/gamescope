@@ -123,6 +123,7 @@ struct wlserver_t {
 
 		struct wlr_renderer *renderer;
 		struct wlr_compositor *compositor;
+		struct wlr_subcompositor *subcompositor;
 		struct wlr_session *session;
 		struct wlr_seat *seat;
 		struct wlr_linux_drm_syncobj_manager_v1 *drm_syncobj_manager_v1;
