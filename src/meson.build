@@ -32,7 +32,7 @@ wlroots_dep = dependency(
 
 displayinfo_dep = dependency(
   'libdisplay-info',
-  version: ['>= 0.0.0', '< 0.2.0'],
+  version: ['>= 0.0.0', '< 0.4.0'],
   fallback: ['libdisplay-info', 'di_dep'],
   default_options: ['default_library=static'],
 )
@@ -116,7 +116,7 @@ if drm_dep.found()
   required_wlroots_features += 'libinput_backend'
   liftoff_dep = dependency(
     'libliftoff',
-    version: ['>= 0.4.0', '< 0.5.0'],
+    version: ['>= 0.4.0', '< 0.7.0'],
     fallback: ['libliftoff', 'liftoff'],
     default_options: ['default_library=static'],
   )
