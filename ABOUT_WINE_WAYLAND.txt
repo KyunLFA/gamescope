@@ -1,0 +1,28 @@
+To run gamescope with Wine's native wayland driver, aside from --expose-wayland you need to pass the flag WAYLAND_DISPLAY=wayland-0 OR WAYLAND_DISPLAY=wayland-1 depending on your wayland compositor (other values besides 1 and 0 may need to be 
+tried before succeeding).It's also highly recommended to temporarily disable the X11 driver altogether, since gamescope messes with the DISPLAY env var (?) and normally with the toggleable registry edit (assuming you already know one is required) you 
+need to unset DISPLAY (DISPLAY= command here). You can achieve that by using:
+
+"
+wine reg.exe add HKCU\\Software\\Wine\\Drivers /v Graphics /d wayland
+"
+
+And enable back x11 by default with:
+
+"
+wine reg.exe add HKCU\\Software\\Wine\\Drivers /v Graphics /d x11,wayland
+" (note: this is the "toggleable registry edit" mentioned above that requires unsetting DISPLAY)
+
+For KDE Plasma 6.0+:
+
+"
+gamescope --expose-wayland -- env WAYLAND_DISPLAY=wayland-0 wine notepad
+"
+
+For sway 1.9+:
+"
+gamescope --expose-wayland -- env WAYLAND_DISPLAY=wayland-1 wine notepad
+"
+(Running a native wayland Wine window in embedded mode is broken for me, as it crashes on its own after a few seconds!)
+(also read https://github.com/ValveSoftware/gamescope/issues/1191 on a possibly related embedded mode bug, Radeon RADV users will want to pass RADV_DEBUG=zerovram on it!)
+
+Happy Wayland native gaming!
