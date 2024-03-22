@@ -36,6 +36,7 @@
 #include <wlr/util/log.h>
 #include <wlr/xwayland/server.h>
 #include <wlr/types/wlr_xdg_shell.h>
+#include <types/wlr_xdg_shell.h>
 #include <wlr/types/wlr_relative_pointer_v1.h>
 #include <wlr/types/wlr_linux_drm_syncobj_v1.h>
 #include "wlr_end.hpp"
@@ -1689,11 +1690,15 @@ void xdg_surface_new(struct wl_listener *listener, void *data)
 {
 	struct wlr_xdg_surface *xdg_surface = (struct wlr_xdg_surface *)data;
 
+	set_xdg_surface_role(xdg_surface, WLR_XDG_SURFACE_ROLE_TOPLEVEL);
+	
 	if (xdg_surface->role != WLR_XDG_SURFACE_ROLE_TOPLEVEL)
 	{
 		wl_log.infof("Not top level surface.");
 		return;
-	}
+	} else {
+		wlr_xdg_surface_schedule_configure(xdg_surface);
+ 	}
 
 	wlserver_wl_surface_info *wlserver_surface = get_wl_surface_info(xdg_surface->surface);
 	if (!wlserver_surface)
