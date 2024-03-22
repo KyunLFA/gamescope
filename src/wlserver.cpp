@@ -27,8 +27,10 @@
 #include <wlr/render/wlr_renderer.h>
 #include <wlr/render/timeline.h>
 #include <wlr/types/wlr_compositor.h>
+#include <wlr/types/wlr_subcompositor.h>
 #include <wlr/types/wlr_keyboard.h>
 #include <wlr/types/wlr_pointer.h>
+#include <wlr/types/wlr_pointer_constraints_v1.h>
 #include <wlr/types/wlr_seat.h>
 #include <wlr/types/wlr_touch.h>
 #include <wlr/util/log.h>
@@ -1780,6 +1782,10 @@ bool wlserver_init( void ) {
 	wlr_renderer_init_wl_display(wlserver.wlr.renderer, wlserver.display);
 
 	wlserver.wlr.compositor = wlr_compositor_create(wlserver.display, 5, wlserver.wlr.renderer);
+
+	wlserver.wlr.subcompositor = wlr_subcompositor_create(wlserver.display);
+
+	wlserver.wlr.constraints = wlr_pointer_constraints_v1_create(wlserver.display);
 
 	wl_signal_add( &wlserver.wlr.compositor->events.new_surface, &new_surface_listener );
 
