@@ -89,3 +89,5 @@ Pull requests for improving Reshade compatibility support are appreciated.
 ## Status of Gamescope Packages
 
 [![Packaging status](https://repology.org/badge/vertical-allrepos/gamescope.svg)](https://repology.org/project/gamescope/versions)
+
+**KyunLFA's README edit** Check out ABOUT_WINE_WAYLAND.txt for setting up gamescope with Wine's native Wayland driver!
