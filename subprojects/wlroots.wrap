@@ -1,0 +1,5 @@
+[wrap-git]
+directory = wlroots
+url = https://gitlab.freedesktop.org/wlroots/wlroots.git
+revision = head
+diff_files = wlroots/explicit-sync-MR-by-emersion.patch
