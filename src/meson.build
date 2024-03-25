@@ -20,6 +20,7 @@ thread_dep = dependency('threads')
 cap_dep = dependency('libcap', required: get_option('rt_cap'))
 epoll_dep = dependency('epoll-shim', required: false)
 glm_dep = dependency('glm')
+reshade_dep = dependency('reshade')
 sdl2_dep = dependency('SDL2', required: get_option('sdl2_backend'))
 stb_dep = dependency('stb')
 avif_dep = dependency('libavif', version: '>=1.0.0', required: get_option('avif_screenshots'))
@@ -36,6 +37,12 @@ displayinfo_dep = dependency(
   version: ['>= 0.0.0', '< 0.5.0'],
   fallback: ['libdisplay-info', 'di_dep'],
   default_options: ['default_library=static'],
+)
+
+reshade_dep = dependency(
+  'reshade',
+  version: ['6.1.2-dev'],
+  fallback: ['reshade', 'reshade_dep'],
 )
 
 libdecor_dep = dependency('libdecor-0')
@@ -171,7 +178,7 @@ gamescope_version = vcs_tag(
     include_directories : [reshade_include],
     dependencies: [
       dep_wayland, dep_x11, dep_xdamage, dep_xcomposite, dep_xrender, dep_xext, dep_xfixes,
-      dep_xxf86vm, dep_xres, glm_dep, drm_dep, wayland_server,
+      dep_xxf86vm, dep_xres, glm_dep, reshade_dep, drm_dep, wayland_server,
       xkbcommon, thread_dep, sdl2_dep, wlroots_dep,
       vulkan_dep, liftoff_dep, dep_xtst, dep_xmu, cap_dep, epoll_dep, pipewire_dep, librt_dep,
       stb_dep, displayinfo_dep, openvr_dep, dep_xcursor, avif_dep, dep_xi,
