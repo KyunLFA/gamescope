@@ -1,0 +1,11 @@
+[wrap-git]
+directory = reshade
+url = https://github.com/crosire/reshade.git
+revision = head
+
+patch_directory = reshade
+diff_files = reshade-patch/linux-compile-fix.patch
+
+[provide]
+reshade=reshade_dep
+

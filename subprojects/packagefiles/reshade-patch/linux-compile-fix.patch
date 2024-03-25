@@ -1,0 +1,71 @@
+diff --git a/source/effect_codegen_spirv.cpp b/source/effect_codegen_spirv.cpp
+index 5397b9ab..0b0640aa 100644
+--- a/source/effect_codegen_spirv.cpp
++++ b/source/effect_codegen_spirv.cpp
+@@ -143,7 +143,7 @@ private:
+ 		uint32_t array_stride;
+ 		std::pair<spv::StorageClass, spv::ImageFormat> storage;
+ 
+-		friend static bool operator==(const type_lookup &lhs, const type_lookup &rhs)
++		friend bool operator==(const type_lookup &lhs, const type_lookup &rhs)
+ 		{
+ 			return lhs.type == rhs.type && lhs.is_ptr == rhs.is_ptr && lhs.array_stride == rhs.array_stride && lhs.storage == rhs.storage;
+ 		}
+@@ -157,7 +157,7 @@ private:
+ 		std::vector<type> param_types;
+ 		bool is_entry_point = false;
+ 
+-		friend static bool operator==(const function_blocks &lhs, const function_blocks &rhs)
++		friend bool operator==(const function_blocks &lhs, const function_blocks &rhs)
+ 		{
+ 			if (lhs.param_types.size() != rhs.param_types.size())
+ 				return false;
+diff --git a/source/effect_expression.cpp b/source/effect_expression.cpp
+index 6c35b9a0..d8cb8faf 100644
+--- a/source/effect_expression.cpp
++++ b/source/effect_expression.cpp
+@@ -8,6 +8,7 @@
+ #include <cassert>
+ #include <cstring> // memcpy, memset
+ #include <algorithm> // std::min, std::max
++#include <climits>
+ 
+ reshadefx::type reshadefx::type::merge(const type &lhs, const type &rhs)
+ {
+diff --git a/source/effect_expression.hpp b/source/effect_expression.hpp
+index b7df1429..45926d38 100644
+--- a/source/effect_expression.hpp
++++ b/source/effect_expression.hpp
+@@ -6,7 +6,7 @@
+ #pragma once
+ 
+ #include "effect_token.hpp"
+-
++#include <climits>
+ namespace reshadefx
+ {
+ 	/// <summary>
+diff --git a/source/effect_parser_stmt.cpp b/source/effect_parser_stmt.cpp
+index 8c940082..f3e0ca2c 100644
+--- a/source/effect_parser_stmt.cpp
++++ b/source/effect_parser_stmt.cpp
+@@ -11,6 +11,7 @@
+ #include <cassert>
+ #include <functional>
+ #include <string_view>
++#include <limits>
+ 
+ struct scope_guard
+ {
+diff --git a/source/effect_token.hpp b/source/effect_token.hpp
+index 2753c77f..64815003 100644
+--- a/source/effect_token.hpp
++++ b/source/effect_token.hpp
+@@ -5,6 +5,7 @@
+ 
+ #pragma once
+ 
++#include <cstdint>
+ #include <string>
+ #include <vector>
+ #include <cstdint>
