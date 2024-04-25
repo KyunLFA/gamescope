@@ -688,10 +688,10 @@ index 0765cce749081f9724e7f383b461214e878502b9..103ab57df73e2e939a90968f91a61e7c
 +
  #endif
 diff --git a/include/render/gles2.h b/include/render/gles2.h
-index db301c6e4e341d92e9d5682ccdba96ffa15a4e5b..1a2617b0ec470a0d7335b97b1236018877a18755 100644
+index a472ee9c60928029d35b095763ef62671a73b383..1b7fca961fc23ad7f30bbc0f09a9ef88efeb1a58 100644
 --- a/include/render/gles2.h
 +++ b/include/render/gles2.h
-@@ -136,6 +136,8 @@ struct wlr_gles2_render_pass {
+@@ -138,6 +138,8 @@ struct wlr_gles2_render_pass {
  	float projection_matrix[9];
  	struct wlr_egl_context prev_ctx;
  	struct wlr_gles2_render_timer *timer;
@@ -700,7 +700,7 @@ index db301c6e4e341d92e9d5682ccdba96ffa15a4e5b..1a2617b0ec470a0d7335b97b12360188
  };
  
  bool is_gles2_pixel_format_supported(const struct wlr_gles2_renderer *renderer,
-@@ -167,6 +169,7 @@ void push_gles2_debug_(struct wlr_gles2_renderer *renderer,
+@@ -169,6 +171,7 @@ void push_gles2_debug_(struct wlr_gles2_renderer *renderer,
  void pop_gles2_debug(struct wlr_gles2_renderer *renderer);
  
  struct wlr_gles2_render_pass *begin_gles2_buffer_pass(struct wlr_gles2_buffer *buffer,
@@ -857,13 +857,13 @@ index 0000000000000000000000000000000000000000..bfbf7c8667f7efec270c7d228c169c67
 +
 +#endif
 diff --git a/include/wlr/render/wlr_renderer.h b/include/wlr/render/wlr_renderer.h
-index 08333a5294729ee3ce9d1e717a635927c8f007dd..d52555b390e6dbac9d000640b90ff0318dfe0892 100644
+index 62da07610fa3163c543fe3fc63b510abb4d6acb3..7ae94e5ea7c52d256951a60256ea74b5e8cdd260 100644
 --- a/include/wlr/render/wlr_renderer.h
 +++ b/include/wlr/render/wlr_renderer.h
-@@ -26,6 +26,15 @@ struct wlr_fbox;
-  * A renderer for basic 2D operations.
-  */
- struct wlr_renderer {
+@@ -30,6 +30,15 @@ struct wlr_renderer {
+ 	// enum wlr_buffer_cap)
+ 	uint32_t render_buffer_caps;
+ 
 +	struct {
 +		/**
 +		 * Whether wait/signal timelines are supported.
@@ -1253,10 +1253,10 @@ index 9177b0a1fafb9269bfaa44caa466e4f6ede57531..6bbaee292383364e106de486e2c292ee
  	matrix_projection(pass->projection_matrix, wlr_buffer->width, wlr_buffer->height,
  		WL_OUTPUT_TRANSFORM_FLIPPED_180);
 diff --git a/render/gles2/renderer.c b/render/gles2/renderer.c
-index 139c1a800451b6bda15fb4e5f29ada8616f69abc..724e870051e96b0b0370acdae95091cf676dec90 100644
+index 7bb9cf346d7d534e43e8236d08475ee661a6ef0e..80b34a022e78d7ae7c6c9556ff751506ec994c9a 100644
 --- a/render/gles2/renderer.c
 +++ b/render/gles2/renderer.c
-@@ -261,7 +261,8 @@ static struct wlr_render_pass *gles2_begin_buffer_pass(struct wlr_renderer *wlr_
+@@ -259,7 +259,8 @@ static struct wlr_render_pass *gles2_begin_buffer_pass(struct wlr_renderer *wlr_
  		return NULL;
  	}
  
@@ -1266,9 +1266,9 @@ index 139c1a800451b6bda15fb4e5f29ada8616f69abc..724e870051e96b0b0370acdae95091cf
  	if (!pass) {
  		return NULL;
  	}
-@@ -684,6 +685,9 @@ struct wlr_renderer *wlr_gles2_renderer_create(struct wlr_egl *egl) {
+@@ -682,6 +683,9 @@ struct wlr_renderer *wlr_gles2_renderer_create(struct wlr_egl *egl) {
  
- 	wlr_egl_unset_current(renderer->egl);
+ 	get_gles2_shm_formats(renderer, &renderer->shm_texture_formats);
  
 +	renderer->wlr_renderer.features.timeline =
 +		egl->procs.eglDupNativeFenceFDANDROID && egl->procs.eglWaitSyncKHR;
@@ -1682,7 +1682,7 @@ index 11396e2fd1ae093fa20de06d889bc39004787221..4b0c720f2ca1bcfff5cdcf3bc54bd358
  
  static void handle_scene_surface_surface_commit(
 diff --git a/types/scene/wlr_scene.c b/types/scene/wlr_scene.c
-index 514c0e152e0b206476a502632fa564c685d5ebc3..f934208bf4aee1f9b340285ed2cf4d61e4fdee8e 100644
+index cd03ea37e252f42ed0596dea954f984bde0dd845..98177bf55e4fed5d9dbd4504f648f5fea81ca8c9 100644
 --- a/types/scene/wlr_scene.c
 +++ b/types/scene/wlr_scene.c
 @@ -3,6 +3,7 @@
@@ -1701,7 +1701,7 @@ index 514c0e152e0b206476a502632fa564c685d5ebc3..f934208bf4aee1f9b340285ed2cf4d61
  	} else if (node->type == WLR_SCENE_NODE_TREE) {
  		struct wlr_scene_tree *scene_tree = wlr_scene_tree_from_node(node);
  
-@@ -894,6 +896,13 @@ void wlr_scene_buffer_set_filter_mode(struct wlr_scene_buffer *scene_buffer,
+@@ -897,6 +899,13 @@ void wlr_scene_buffer_set_filter_mode(struct wlr_scene_buffer *scene_buffer,
  	scene_node_update(&scene_buffer->node, NULL);
  }
  
@@ -1715,7 +1715,7 @@ index 514c0e152e0b206476a502632fa564c685d5ebc3..f934208bf4aee1f9b340285ed2cf4d61
  static struct wlr_texture *scene_buffer_get_texture(
  		struct wlr_scene_buffer *scene_buffer, struct wlr_renderer *renderer) {
  	if (scene_buffer->buffer == NULL || scene_buffer->texture != NULL) {
-@@ -1236,6 +1245,8 @@ static void scene_entry_render(struct render_list_entry *entry, const struct ren
+@@ -1239,6 +1248,8 @@ static void scene_entry_render(struct render_list_entry *entry, const struct ren
  			.filter_mode = scene_buffer->filter_mode,
  			.blend_mode = pixman_region32_not_empty(&opaque) ?
  				WLR_RENDER_BLEND_MODE_PREMULTIPLIED : WLR_RENDER_BLEND_MODE_NONE,
@@ -1724,7 +1724,7 @@ index 514c0e152e0b206476a502632fa564c685d5ebc3..f934208bf4aee1f9b340285ed2cf4d61
  		});
  
  		struct wlr_scene_output_sample_event sample_event = {
-@@ -1384,6 +1395,14 @@ struct wlr_scene_output *wlr_scene_output_create(struct wlr_scene *scene,
+@@ -1392,6 +1403,14 @@ struct wlr_scene_output *wlr_scene_output_create(struct wlr_scene *scene,
  		prev_output_link = &current_output->link;
  	}
  
@@ -1739,7 +1739,7 @@ index 514c0e152e0b206476a502632fa564c685d5ebc3..f934208bf4aee1f9b340285ed2cf4d61
  	scene_output->index = prev_output_index + 1;
  	assert(scene_output->index < 64);
  	wl_list_insert(prev_output_link, &scene_output->link);
-@@ -1432,7 +1451,7 @@ void wlr_scene_output_destroy(struct wlr_scene_output *scene_output) {
+@@ -1440,7 +1459,7 @@ void wlr_scene_output_destroy(struct wlr_scene_output *scene_output) {
  	wl_list_remove(&scene_output->output_commit.link);
  	wl_list_remove(&scene_output->output_damage.link);
  	wl_list_remove(&scene_output->output_needs_frame.link);
@@ -1748,7 +1748,7 @@ index 514c0e152e0b206476a502632fa564c685d5ebc3..f934208bf4aee1f9b340285ed2cf4d61
  	wl_array_release(&scene_output->render_list);
  	free(scene_output);
  }
-@@ -1652,6 +1671,9 @@ static bool scene_entry_try_direct_scanout(struct render_list_entry *entry,
+@@ -1653,6 +1672,9 @@ static bool scene_entry_try_direct_scanout(struct render_list_entry *entry,
  	}
  
  	wlr_output_state_set_buffer(&pending, buffer->buffer);
@@ -1758,7 +1758,7 @@ index 514c0e152e0b206476a502632fa564c685d5ebc3..f934208bf4aee1f9b340285ed2cf4d61
  
  	if (!wlr_output_test_state(scene_output->output, &pending)) {
  		wlr_output_state_finish(&pending);
-@@ -1856,9 +1878,12 @@ bool wlr_scene_output_build_state(struct wlr_scene_output *scene_output,
+@@ -1858,9 +1880,12 @@ bool wlr_scene_output_build_state(struct wlr_scene_output *scene_output,
  		timer->pre_render_duration = timespec_to_nsec(&duration);
  	}
  
@@ -1771,7 +1771,7 @@ index 514c0e152e0b206476a502632fa564c685d5ebc3..f934208bf4aee1f9b340285ed2cf4d61
  	});
  	if (render_pass == NULL) {
  		wlr_buffer_unlock(buffer);
-@@ -1965,6 +1990,11 @@ bool wlr_scene_output_build_state(struct wlr_scene_output *scene_output,
+@@ -1967,6 +1992,11 @@ bool wlr_scene_output_build_state(struct wlr_scene_output *scene_output,
  	wlr_output_state_set_buffer(state, buffer);
  	wlr_buffer_unlock(buffer);
  
@@ -1780,9 +1780,9 @@ index 514c0e152e0b206476a502632fa564c685d5ebc3..f934208bf4aee1f9b340285ed2cf4d61
 +			scene_output->in_point);
 +	}
 +
- 	if (debug_damage == WLR_SCENE_DEBUG_DAMAGE_HIGHLIGHT &&
- 			!wl_list_empty(&scene_output->damage_highlight_regions)) {
- 		wlr_output_schedule_frame(scene_output->output);
+ 	return true;
+ }
+ 
 diff --git a/types/wlr_linux_drm_syncobj_v1.c b/types/wlr_linux_drm_syncobj_v1.c
 new file mode 100644
 index 0000000000000000000000000000000000000000..b6ba94e3af26f80cdf41d4af40a0fcca8013d1a9
