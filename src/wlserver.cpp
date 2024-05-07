@@ -23,6 +23,7 @@
 #include <wlr/backend/libinput.h>
 #endif
 #include <wlr/backend/multi.h>
+#include <wlr/types/wlr_linux_dmabuf_v1.h>
 #include <wlr/interfaces/wlr_keyboard.h>
 #include <wlr/render/wlr_renderer.h>
 #include <wlr/render/timeline.h>
@@ -1735,8 +1736,15 @@ bool wlserver_init( void ) {
 	wlserver.wlr.renderer = vulkan_renderer_create();
 
 	wlr_renderer_init_wl_display(wlserver.wlr.renderer, wlserver.display);
+	
+	wlr_renderer_init_wl_shm(wlserver.wlr.renderer, wlserver.display);
+	
+	if (wlr_renderer_get_texture_formats(wlserver.wlr.renderer, WLR_BUFFER_CAP_DMABUF) != NULL) {
+		wlserver.wlr.linux_dmabuf_v1 = wlr_linux_dmabuf_v1_create_with_renderer(
+			wlserver.display, 4, wlserver.wlr.renderer);
+	}
 
-	wlserver.wlr.compositor = wlr_compositor_create(wlserver.display, 5, wlserver.wlr.renderer);
+	wlserver.wlr.compositor = wlr_compositor_create(wlserver.display, 6, wlserver.wlr.renderer);
 
 	wlserver.wlr.subcompositor = wlr_subcompositor_create(wlserver.display);
 
@@ -1757,10 +1765,6 @@ bool wlserver_init( void ) {
 	create_gamescope_private();
 
 	create_presentation_time();
-
-	// Have to make this old ancient thing for compat with older XWayland.
-	// Someday, he will be purged.
-	wlr_drm_create(wlserver.display, wlserver.wlr.renderer);
 
 	if ( GetBackend()->SupportsExplicitSync() )
 	{

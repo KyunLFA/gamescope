@@ -115,7 +115,7 @@ Date:   Wed Oct 20 18:47:46 2021 +0200
  include/wlr/types/wlr_linux_drm_syncobj_v1.h |  46 ++
  include/wlr/types/wlr_output.h               |  36 ++
  include/wlr/types/wlr_scene.h                |   9 +
- protocol/meson.build                         |   3 +-
+ protocol/meson.build                         |   1 +
  render/egl.c                                 |  74 ++++
  render/gles2/pass.c                          |  58 ++-
  render/gles2/renderer.c                      |   6 +-
@@ -127,7 +127,7 @@ Date:   Wed Oct 20 18:47:46 2021 +0200
  types/scene/surface.c                        |  12 +
  types/scene/wlr_scene.c                      |  32 +-
  types/wlr_linux_drm_syncobj_v1.c             | 443 +++++++++++++++++++
- 27 files changed, 1518 insertions(+), 13 deletions(-)
+ 27 files changed, 1517 insertions(+), 12 deletions(-)
  create mode 100644 examples/explicit-sync.c
  create mode 100644 include/wlr/render/timeline.h
  create mode 100644 include/wlr/types/wlr_linux_drm_syncobj_v1.h
@@ -710,13 +710,13 @@ index a472ee9c60928029d35b095763ef62671a73b383..1b7fca961fc23ad7f30bbc0f09a9ef88
  
  #endif
 diff --git a/include/wlr/render/pass.h b/include/wlr/render/pass.h
-index d1b3eb1505383a2dc0df7995ee846acd5f1833ef..b54303c2c265d02e79f34120e6d17f141bae5722 100644
+index 66480f7f7d05e859118fd2f7219a6d7de808b2ec..c00e9e865898c4a6995a9b548ece89645061c98e 100644
 --- a/include/wlr/render/pass.h
 +++ b/include/wlr/render/pass.h
-@@ -30,6 +30,18 @@ struct wlr_render_timer;
- struct wlr_buffer_pass_options {
- 	/* Timer to measure the duration of the render pass */
- 	struct wlr_render_timer *timer;
+@@ -33,6 +33,18 @@ struct wlr_buffer_pass_options {
+ 	/* Color transform to apply to the output of the render pass,
+ 	 * leave NULL to indicate sRGB/no custom transform */
+ 	struct wlr_color_transform *color_transform;
 +
 +	/* Signal a timeline synchronization point when the render pass completes.
 +	 *
@@ -732,7 +732,7 @@ index d1b3eb1505383a2dc0df7995ee846acd5f1833ef..b54303c2c265d02e79f34120e6d17f14
  };
  
  /**
-@@ -85,6 +97,18 @@ struct wlr_render_texture_options {
+@@ -88,6 +100,18 @@ struct wlr_render_texture_options {
  	enum wlr_scale_filter_mode filter_mode;
  	/* Blend mode */
  	enum wlr_render_blend_mode blend_mode;
@@ -857,25 +857,22 @@ index 0000000000000000000000000000000000000000..bfbf7c8667f7efec270c7d228c169c67
 +
 +#endif
 diff --git a/include/wlr/render/wlr_renderer.h b/include/wlr/render/wlr_renderer.h
-index 62da07610fa3163c543fe3fc63b510abb4d6acb3..7ae94e5ea7c52d256951a60256ea74b5e8cdd260 100644
+index bb9a55fcf6d654a31913e913929ab009521fd835..756056a8a88607f536a1e01b4bdc920bb36e3a5f 100644
 --- a/include/wlr/render/wlr_renderer.h
 +++ b/include/wlr/render/wlr_renderer.h
-@@ -30,6 +30,15 @@ struct wlr_renderer {
- 	// enum wlr_buffer_cap)
- 	uint32_t render_buffer_caps;
- 
-+	struct {
+@@ -45,6 +45,12 @@ struct wlr_renderer {
+ 		 * Does the renderer support color transforms on its output?
+ 		 */
+ 		bool output_color_transform;
 +		/**
 +		 * Whether wait/signal timelines are supported.
 +		 *
 +		 * See struct wlr_render_timeline.
 +		 */
 +		bool timeline;
-+	} features;
-+
- 	struct {
- 		struct wl_signal destroy;
- 		/**
+ 	} features;
+
+ 	// private state
 diff --git a/include/wlr/types/wlr_linux_drm_syncobj_v1.h b/include/wlr/types/wlr_linux_drm_syncobj_v1.h
 new file mode 100644
 index 0000000000000000000000000000000000000000..b43186fe9800ccd63befce662bff4bac6a3845f8
@@ -997,7 +994,7 @@ index d349f8ffa7b7bdb5168d4df3e3b1f4f39a4893c7..5d59ece11e892786adf2a6f7b173fe66
  /**
   * Copies the output state from src to dst. It is safe to then
 diff --git a/include/wlr/types/wlr_scene.h b/include/wlr/types/wlr_scene.h
-index 37abd20f5b033a6369599db0b237d04f47105b0a..e65a17989dcbafebe4fc3938ff97476270fbf7af 100644
+index 2f57ecfc3ef7f43eedffe928e567b4630c54087a..3292e211e18069be6268b4848d3e4cb304a1b449 100644
 --- a/include/wlr/types/wlr_scene.h
 +++ b/include/wlr/types/wlr_scene.h
 @@ -190,6 +190,9 @@ struct wlr_scene_buffer {
@@ -1031,17 +1028,10 @@ index 37abd20f5b033a6369599db0b237d04f47105b0a..e65a17989dcbafebe4fc3938ff974762
   * Add a viewport for the specified output to the scene-graph.
   *
 diff --git a/protocol/meson.build b/protocol/meson.build
-index 6a8d82b4ffb1d4c90f300fd605bb5117e89566fb..8242f3e5431ce1456cc9615dc018161dc31aadc4 100644
+index c60f2b9a38bd7e94492d40898960be09e5ca9fe3..a424366d1662493030c7fe95bb614071475d1cef 100644
 --- a/protocol/meson.build
 +++ b/protocol/meson.build
-@@ -1,5 +1,5 @@
- wayland_protos = dependency('wayland-protocols',
--	version: '>=1.33',
-+	version: '>=1.34',
- 	fallback: 'wayland-protocols',
- 	default_options: ['tests=false'],
- )
-@@ -26,6 +26,7 @@ protocols = {
+@@ -27,6 +27,7 @@ protocols = {
  	'ext-idle-notify-v1': wl_protocol_dir / 'staging/ext-idle-notify/ext-idle-notify-v1.xml',
  	'ext-session-lock-v1': wl_protocol_dir / 'staging/ext-session-lock/ext-session-lock-v1.xml',
  	'fractional-scale-v1': wl_protocol_dir / 'staging/fractional-scale/fractional-scale-v1.xml',
@@ -1253,7 +1243,7 @@ index 9177b0a1fafb9269bfaa44caa466e4f6ede57531..6bbaee292383364e106de486e2c292ee
  	matrix_projection(pass->projection_matrix, wlr_buffer->width, wlr_buffer->height,
  		WL_OUTPUT_TRANSFORM_FLIPPED_180);
 diff --git a/render/gles2/renderer.c b/render/gles2/renderer.c
-index 7bb9cf346d7d534e43e8236d08475ee661a6ef0e..80b34a022e78d7ae7c6c9556ff751506ec994c9a 100644
+index 4694b2a8f8aa4151c305a976222f10227611b20d..3eeb1ba9c199ddd7a26ead06ba502efb5a0622cd 100644
 --- a/render/gles2/renderer.c
 +++ b/render/gles2/renderer.c
 @@ -259,7 +259,8 @@ static struct wlr_render_pass *gles2_begin_buffer_pass(struct wlr_renderer *wlr_
@@ -1266,7 +1256,7 @@ index 7bb9cf346d7d534e43e8236d08475ee661a6ef0e..80b34a022e78d7ae7c6c9556ff751506
  	if (!pass) {
  		return NULL;
  	}
-@@ -682,6 +683,9 @@ struct wlr_renderer *wlr_gles2_renderer_create(struct wlr_egl *egl) {
+@@ -683,6 +684,9 @@ struct wlr_renderer *wlr_gles2_renderer_create(struct wlr_egl *egl) {
  
  	get_gles2_shm_formats(renderer, &renderer->shm_texture_formats);
  
@@ -1277,10 +1267,10 @@ index 7bb9cf346d7d534e43e8236d08475ee661a6ef0e..80b34a022e78d7ae7c6c9556ff751506
  
  error:
 diff --git a/render/meson.build b/render/meson.build
-index f09905c716e35cd53370fa6565e38892767d5e2b..522268538db7dc44d98fb7e195ff001aae51d749 100644
+index e3c5f5350a56ecd7fce6fb8d7c948c167f782efd..22b97e23f3c66dee0fcb6cdc491fe75a87c3182c 100644
 --- a/render/meson.build
 +++ b/render/meson.build
-@@ -11,6 +11,7 @@ wlr_files += files(
+@@ -12,6 +12,7 @@ wlr_files += files(
  	'pass.c',
  	'pixel_format.c',
  	'swapchain.c',
@@ -1288,7 +1278,7 @@ index f09905c716e35cd53370fa6565e38892767d5e2b..522268538db7dc44d98fb7e195ff001a
  	'wlr_renderer.c',
  	'wlr_texture.c',
  )
-@@ -21,6 +22,8 @@ else
+@@ -22,6 +23,8 @@ else
  	wlr_files += files('dmabuf_fallback.c')
  endif
  
@@ -1534,10 +1524,10 @@ index 0000000000000000000000000000000000000000..180f3aa6ede201bdb5de4f2a91dfead9
 +	return wl_event_loop_add_fd(loop, ev_fd, WL_EVENT_READABLE, handle_eventfd_ready, waiter);
 +}
 diff --git a/types/meson.build b/types/meson.build
-index e6c0824476ad1ff226b7b58d64c1972d8058b778..ba62ce06279965780008bf86db9f9dd399808103 100644
+index 9ea0d5402dec1ac1766634c69d368ee05e5caf29..ec70d4b7c26122d7a920decf098320a50550af4c 100644
 --- a/types/meson.build
 +++ b/types/meson.build
-@@ -54,6 +54,7 @@ wlr_files += files(
+@@ -55,6 +55,7 @@ wlr_files += files(
  	'wlr_keyboard_shortcuts_inhibit_v1.c',
  	'wlr_layer_shell_v1.c',
  	'wlr_linux_dmabuf_v1.c',
@@ -1645,10 +1635,10 @@ index 0909b3e8ac15927c2e94c9c80028dee16fcadaf6..4146fc750b5071517c8d02b34b6d5c12
  	*dst = copy;
  	return true;
 diff --git a/types/scene/surface.c b/types/scene/surface.c
-index 11396e2fd1ae093fa20de06d889bc39004787221..4b0c720f2ca1bcfff5cdcf3bc54bd3587ed10abe 100644
+index e0f61f510687f27271bc26942e41c4eb667e737e..f59edfbe6aada2d7ea91f9d0e8fa64f4ad604c42 100644
 --- a/types/scene/surface.c
 +++ b/types/scene/surface.c
-@@ -3,6 +3,7 @@
+@@ -4,6 +4,7 @@
  #include <wlr/types/wlr_compositor.h>
  #include <wlr/types/wlr_scene.h>
  #include <wlr/types/wlr_fractional_scale_v1.h>
@@ -1656,7 +1646,7 @@ index 11396e2fd1ae093fa20de06d889bc39004787221..4b0c720f2ca1bcfff5cdcf3bc54bd358
  #include <wlr/types/wlr_presentation_time.h>
  #include <wlr/util/transform.h>
  #include "types/wlr_scene.h"
-@@ -139,6 +140,7 @@ static void surface_reconfigure(struct wlr_scene_surface *scene_surface) {
+@@ -140,6 +141,7 @@ static void surface_reconfigure(struct wlr_scene_surface *scene_surface) {
  
  	if (width <= 0 || height <= 0) {
  		wlr_scene_buffer_set_buffer(scene_buffer, NULL);
@@ -1664,7 +1654,7 @@ index 11396e2fd1ae093fa20de06d889bc39004787221..4b0c720f2ca1bcfff5cdcf3bc54bd358
  		pixman_region32_fini(&opaque);
  		return;
  	}
-@@ -160,6 +162,16 @@ static void surface_reconfigure(struct wlr_scene_surface *scene_surface) {
+@@ -169,6 +171,16 @@ static void surface_reconfigure(struct wlr_scene_surface *scene_surface) {
  	}
  
  	pixman_region32_fini(&opaque);
@@ -1682,7 +1672,7 @@ index 11396e2fd1ae093fa20de06d889bc39004787221..4b0c720f2ca1bcfff5cdcf3bc54bd358
  
  static void handle_scene_surface_surface_commit(
 diff --git a/types/scene/wlr_scene.c b/types/scene/wlr_scene.c
-index cd03ea37e252f42ed0596dea954f984bde0dd845..98177bf55e4fed5d9dbd4504f648f5fea81ca8c9 100644
+index 78c322d464cf40e62cb3af04c92ac979fa323480..a68204fc90467c990182b71a87280f8b84145fcd 100644
 --- a/types/scene/wlr_scene.c
 +++ b/types/scene/wlr_scene.c
 @@ -3,6 +3,7 @@
@@ -1758,7 +1748,7 @@ index cd03ea37e252f42ed0596dea954f984bde0dd845..98177bf55e4fed5d9dbd4504f648f5fe
  
  	if (!wlr_output_test_state(scene_output->output, &pending)) {
  		wlr_output_state_finish(&pending);
-@@ -1858,9 +1880,12 @@ bool wlr_scene_output_build_state(struct wlr_scene_output *scene_output,
+@@ -1858,10 +1880,13 @@ bool wlr_scene_output_build_state(struct wlr_scene_output *scene_output,
  		timer->pre_render_duration = timespec_to_nsec(&duration);
  	}
  
@@ -1766,12 +1756,13 @@ index cd03ea37e252f42ed0596dea954f984bde0dd845..98177bf55e4fed5d9dbd4504f648f5fe
  	struct wlr_render_pass *render_pass = wlr_renderer_begin_buffer_pass(output->renderer, buffer,
  			&(struct wlr_buffer_pass_options){
  		.timer = timer ? timer->render_timer : NULL,
+ 		.color_transform = options->color_transform,
 +		.signal_timeline = scene_output->in_timeline,
 +		.signal_point = scene_output->in_point,
  	});
  	if (render_pass == NULL) {
  		wlr_buffer_unlock(buffer);
-@@ -1967,6 +1992,11 @@ bool wlr_scene_output_build_state(struct wlr_scene_output *scene_output,
+@@ -1968,6 +1993,11 @@ bool wlr_scene_output_build_state(struct wlr_scene_output *scene_output,
  	wlr_output_state_set_buffer(state, buffer);
  	wlr_buffer_unlock(buffer);
  
@@ -2233,5 +2224,4 @@ index 0000000000000000000000000000000000000000..b6ba94e3af26f80cdf41d4af40a0fcca
 +	return &surface->current;
 +}
 -- 
-2.44.0
-
+2.45.0
