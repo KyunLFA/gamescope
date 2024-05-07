@@ -1803,7 +1803,7 @@ bool wlserver_init( void ) {
 
 	wlr_renderer_init_wl_display(wlserver.wlr.renderer, wlserver.display);
 
-	wlserver.wlr.compositor = wlr_compositor_create(wlserver.display, 5, wlserver.wlr.renderer);
+	wlserver.wlr.compositor = wlr_compositor_create(wlserver.display, 6, wlserver.wlr.renderer);
 
 	wlserver.wlr.subcompositor = wlr_subcompositor_create(wlserver.display);
 
@@ -1824,10 +1824,6 @@ bool wlserver_init( void ) {
 	create_gamescope_private();
 
 	create_presentation_time();
-
-	// Have to make this old ancient thing for compat with older XWayland.
-	// Someday, he will be purged.
-	wlr_drm_create(wlserver.display, wlserver.wlr.renderer);
 
 	if ( GetBackend()->SupportsExplicitSync() )
 	{
