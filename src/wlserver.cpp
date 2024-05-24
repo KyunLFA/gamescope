@@ -26,7 +26,7 @@
 #include <wlr/types/wlr_linux_dmabuf_v1.h>
 #include <wlr/interfaces/wlr_keyboard.h>
 #include <wlr/render/wlr_renderer.h>
-#include <wlr/render/timeline.h>
+#include <wlr/render/drm_syncobj.h>
 #include <wlr/types/wlr_compositor.h>
 #include <wlr/types/wlr_subcompositor.h>
 #include <wlr/types/wlr_keyboard.h>
@@ -120,7 +120,7 @@ void GamescopeTimelinePoint::Release()
 
 	//fprintf( stderr, "Release: %lu\n", ulPoint );
 	drmSyncobjTimelineSignal( pTimeline->drm_fd, &pTimeline->handle, &ulPoint, 1 );
-	wlr_render_timeline_unref( pTimeline );
+	wlr_drm_syncobj_timeline_unref( pTimeline );
 }
 
 //
@@ -201,7 +201,7 @@ std::optional<ResListEntry_t> PrepareCommit( struct wlr_surface *surf, struct wl
 		}
 
 		oReleasePoint.emplace(
-			  wlr_render_timeline_ref( pSyncState->release_timeline ),
+			  wlr_drm_syncobj_timeline_ref( pSyncState->release_timeline ),
 			  pSyncState->release_point 
 		);
 	}
