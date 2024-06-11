@@ -1233,8 +1233,10 @@ namespace GamescopeWSILayer {
             abort();
             continue;
           }
+          
+          if (!gamescopeSurface->isWayland())
+            xcb::Prefetcher prefetcher(gamescopeSurface->connection, gamescopeSurface->window);
 
-          xcb::Prefetcher prefetcher(gamescopeSurface->connection, gamescopeSurface->window);
           const bool canBypass = gamescopeSurface->canBypassXWayland();
           if (canBypass != gamescopeSwapchain->isBypassingXWayland)
             UpdateSwapchainResult(canBypass ? VK_SUBOPTIMAL_KHR : VK_ERROR_OUT_OF_DATE_KHR);
