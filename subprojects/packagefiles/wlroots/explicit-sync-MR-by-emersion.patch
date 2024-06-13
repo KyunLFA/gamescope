@@ -1,158 +1,117 @@
-explicit-sync-v2 branch from emersion (https://gitlab.freedesktop.org/emersion/wlroots/-/tree/explicit-sync-v2?ref_type=heads)
+explicit-sync-ng branch from emersion (https://gitlab.freedesktop.org/emersion/wlroots/-/tree/explicit-sync-ng?ref_type=heads)
 
-From 5342ac6bdadb4218a8fc68d84229d1c992d89c2a Mon Sep 17 00:00:00 2001
+From e0cef4ee296153a2cfc6295ce16eb484955305ad Mon Sep 17 00:00:00 2001
 From: Foo Bar <foo@bar.com>
-Date: Thu, 23 May 2024 22:48:47 -0300
-Subject: [PATCH] explicit-sync
+Date: Thu, 13 Jun 2024 11:55:16 -0300
+Subject: [PATCH] explicit sync
 
-commit 07eede238e15e34100d2a5bf9b203e99ebc7f9fa
+commit 1f163742f38ddbde5f98903b7278004212a85176
 Author: Simon Ser <contact@emersion.fr>
 Date:   Fri May 10 18:32:04 2024 +0200
 
     cursor: add support for linux-drm-syncobj-v1
 
-commit 70d4d0675f2f9c29e3b276f00685e840b88d50cb
+commit 00f1a63f1761deb69a984c6cc6e04e84c8767ea7
 Author: Simon Ser <contact@emersion.fr>
 Date:   Wed Apr 3 15:08:44 2024 +0200
 
     scene: add explicit synchronization for rendered buffers
 
-commit 8a762246b755687f8aa61510e874c3072dc72dae
+commit 30b6bb596c649bae6255625161b2d186c3144050
 Author: Simon Ser <contact@emersion.fr>
 Date:   Wed Apr 3 14:37:12 2024 +0200
 
     scene: add support for linux-drm-syncobj-v1
 
-commit 6ab31bfa4c5a184d2afbbe12dab1785d46d00464
+commit 3a6f13ac7dc33f1c4fd03afdec6ca94784820c6c
 Author: Simon Ser <contact@emersion.fr>
 Date:   Fri May 10 16:46:15 2024 +0200
 
     linux-drm-syncobj-v1: add helper to signal on buffer release
 
-commit 662dc9d2ea26758f248fd7d3ff3dc4d11aff1477
+commit e18334ca3a570b9ef4623ad002ec07ba3e27db8e
 Author: Simon Ser <contact@emersion.fr>
 Date:   Wed Apr 3 14:32:30 2024 +0200
 
     scene: add wlr_scene_buffer_set_wait_timeline()
 
-commit 6901cfcd247de7bb2def4446c79db57e2135bc7a
+commit d7fc830602d7d216916f25f590d6bb4a593ac852
 Author: Simon Ser <contact@emersion.fr>
 Date:   Wed Oct 20 22:00:39 2021 +0200
 
     examples/explicit-sync: new example
 
-commit 3b68e8853f2c5790e5130bf40c9549bfb9c851fb
-Author: Simon Ser <contact@emersion.fr>
-Date:   Thu Oct 21 15:02:31 2021 +0200
-
-    linux-drm-syncobj-v1: new protocol implementation
-
-    References: https://gitlab.freedesktop.org/wayland/wayland-protocols/-/merge_requests/90
-
-commit 939b212b16ebcfe2e003cb2e963d6475d748d570
+commit 2886275b541161757cd96f18fe9c4c83c26b18ff
 Author: Simon Ser <contact@emersion.fr>
 Date:   Tue Feb 27 18:38:12 2024 +0100
 
-    render/timeline: add wlr_render_timeline_export()
+    render/drm_syncobj: add wlr_drm_syncobj_timeline_export()
 
-commit fc8f92b4dfc680f2d009764e9cd36790c8c65c31
-Author: Simon Ser <contact@emersion.fr>
-Date:   Mon Jul 10 17:24:09 2023 +0200
-
-    render/timeline: add helpers to wait for timeline points
-
-    References: https://patchwork.freedesktop.org/patch/506761/
-
-commit 588db7f72835544c2d501f281be46e6e1fb8a3b4
+commit 79a9ecf87f8624bda0db7138d8179394a6dea9b3
 Author: Simon Ser <contact@emersion.fr>
 Date:   Thu Oct 21 15:23:20 2021 +0200
 
-    render/timeline: add wlr_render_timeline_transfer()
+    render/drm_syncobj: add wlr_drm_syncobj_timeline_transfer()
 
-commit 4456f9dcb327925bc0f8e489cb69dd546ffd67b3
-Author: Simon Ser <contact@emersion.fr>
-Date:   Thu Oct 21 15:02:09 2021 +0200
-
-    render/timeline: add wlr_render_timeline_import()
-
-commit 48a012b59bd4c93bc61ca371afea039dcd573081
+commit e239c03c3f34c1a1525c37884d52d9f8b7113a95
 Author: Simon Ser <contact@emersion.fr>
 Date:   Wed Oct 20 20:09:38 2021 +0200
 
     backend/drm: add support for explicit sync APIs
 
-commit 6db49bca04b99824e0b02d5819463b05dba555ba
+commit fa514932e713ae2f42f985520b86ca2d2420a4e8
 Author: Simon Ser <contact@emersion.fr>
 Date:   Wed Oct 20 19:29:00 2021 +0200
 
     output: add explicit sync API
 
-commit b5bb742544fc7a7d28772b0a55c96329695930d0
+commit 8f9401e0b98f8c83018dcdedf66c32b03383da5a
 Author: Simon Ser <contact@emersion.fr>
 Date:   Mon Jul 10 16:15:59 2023 +0200
 
     render/gles2: implement explicit sync API
 
-commit 623a9004e0bfd3c2c9af381e6a7901f9cfc71607
+commit 93cc3d80c7730b5cba5e06899208f075a622bfa3
 Author: Simon Ser <contact@emersion.fr>
 Date:   Mon Mar 16 17:24:25 2020 +0100
 
     render/egl: add support for explicit sync extensions
 
-commit 75863ebbf0516415fd15f1f49ef63550483a7f46
+commit 5d80393ae3b5f6dcff8bcf7ca35d63e2acc1dce3
 Author: Simon Ser <contact@emersion.fr>
 Date:   Mon Jul 10 10:53:12 2023 +0200
 
     render: add explicit sync API
-
-commit af48ef21d9a72c4b832c63dda9fd942a601c5f12
-Author: Simon Ser <contact@emersion.fr>
-Date:   Wed Oct 20 18:47:46 2021 +0200
-
-    render/timeline: introduce wlr_timeline
-
-    wlr_timeline is a synchronization primitive based on drm_syncobj
-    timelines. They are heavily inspired from Vulkan timeline
-    semaphores [1].
-
-    [1]: https://www.khronos.org/blog/vulkan-timeline-semaphores
 ---
- backend/drm/atomic.c                         |  62 ++-
+ backend/drm/atomic.c                         |  62 +++-
  backend/drm/drm.c                            |  10 +-
  backend/drm/properties.c                     |   2 +
- examples/explicit-sync.c                     | 298 +++++++++++
+ examples/explicit-sync.c                     | 298 +++++++++++++++++++
  examples/meson.build                         |   4 +
  include/backend/drm/drm.h                    |   1 +
  include/backend/drm/properties.h             |   2 +
  include/render/egl.h                         |  12 +
  include/render/gles2.h                       |   5 +-
  include/types/wlr_output.h                   |   3 +-
- include/wlr/render/drm_syncobj.h             | 123 +++++
- include/wlr/render/pass.h                    |  24 +
+ include/wlr/render/drm_syncobj.h             |  11 +
+ include/wlr/render/pass.h                    |  24 ++
  include/wlr/render/wlr_renderer.h            |   6 +
- include/wlr/types/wlr_linux_drm_syncobj_v1.h |  55 ++
- include/wlr/types/wlr_output.h               |  38 ++
+ include/wlr/types/wlr_linux_drm_syncobj_v1.h |   9 +
+ include/wlr/types/wlr_output.h               |  38 +++
  include/wlr/types/wlr_scene.h                |   9 +
- protocol/meson.build                         |   1 +
- render/drm_syncobj.c                         | 234 +++++++++
- render/egl.c                                 |  74 +++
- render/gles2/pass.c                          |  60 ++-
+ render/drm_syncobj.c                         |  22 ++
+ render/egl.c                                 |  74 +++++
+ render/gles2/pass.c                          |  60 +++-
  render/gles2/renderer.c                      |   6 +-
- render/meson.build                           |   3 +
- types/meson.build                            |   1 +
  types/output/cursor.c                        |  21 +-
  types/output/output.c                        |  22 +-
- types/output/state.c                         |  28 +
- types/scene/surface.c                        |  18 +
- types/scene/wlr_scene.c                      |  37 +-
+ types/output/state.c                         |  34 ++-
+ types/scene/surface.c                        |  18 ++
+ types/scene/wlr_scene.c                      |  37 ++-
  types/wlr_cursor.c                           |  20 +-
- types/wlr_linux_drm_syncobj_v1.c             | 506 +++++++++++++++++++
- 30 files changed, 1667 insertions(+), 18 deletions(-)
+ types/wlr_linux_drm_syncobj_v1.c             |  37 +++
+ 27 files changed, 828 insertions(+), 19 deletions(-)
  create mode 100644 examples/explicit-sync.c
- create mode 100644 include/wlr/render/drm_syncobj.h
- create mode 100644 include/wlr/types/wlr_linux_drm_syncobj_v1.h
- create mode 100644 render/drm_syncobj.c
- create mode 100644 types/wlr_linux_drm_syncobj_v1.c
 
 diff --git a/backend/drm/atomic.c b/backend/drm/atomic.c
 index 9defa7c64c2a62c97565e315c30666d7555425bb..a6880e2191c939f1cc192b7941891b11539f1325 100644
@@ -744,75 +703,13 @@ index 09be35510818c8ea39137a50f0865530d0b69f02..bd095d8f20251f8b543483f2b7dff524
  void output_defer_present(struct wlr_output *output, struct wlr_output_event_present event);
  
 diff --git a/include/wlr/render/drm_syncobj.h b/include/wlr/render/drm_syncobj.h
-new file mode 100644
-index 0000000000000000000000000000000000000000..6dcc244661705ed2210c5b0d974eb3f110536e05
---- /dev/null
+index be3dce2d7652c4a2237b084375d9d8ff932312e2..bf406d8716554cc519e7dcc4a5e356c654fe6cc7 100644
+--- a/include/wlr/render/drm_syncobj.h
 +++ b/include/wlr/render/drm_syncobj.h
-@@ -0,0 +1,123 @@
-+#ifndef WLR_RENDER_TIMELINE_H
-+#define WLR_RENDER_TIMELINE_H
-+
-+#include <stdbool.h>
-+#include <stdint.h>
-+#include <wayland-server-core.h>
-+
-+/**
-+ * A synchronization timeline.
-+ *
-+ * Timelines are used to synchronize accesses to buffers. Given a producer
-+ * (writing contents to a buffer) and a consumer (reading from the buffer), the
-+ * compositor needs to synchronize back-and-forth between these two users. The
-+ * consumer needs to wait for the producer to signal that they're done with the
-+ * writes, and the producer needs to wait for the consumer to signal that
-+ * they're done with the reads.
-+ *
-+ * Timelines provide synchronization points in the form of monotonically
-+ * increasing 64-bit integer values.
-+ *
-+ * wlroots timelines are designed after Vulkan timeline semaphores. For more
-+ * information on the Vulkan APIs, see:
-+ * https://www.khronos.org/blog/vulkan-timeline-semaphores
-+ *
-+ * wlroots timelines are powered by DRM synchronization objects (drm_syncobj):
-+ * https://dri.freedesktop.org/docs/drm/gpu/drm-mm.html#drm-sync-objects
-+ */
-+struct wlr_drm_syncobj_timeline {
-+	int drm_fd;
-+	uint32_t handle;
-+
-+	// private state
-+
-+	size_t n_refs;
-+};
-+
-+struct wlr_drm_syncobj_timeline_waiter {
-+	struct {
-+		struct wl_signal ready;
-+	} events;
-+
-+	// private state
-+
-+	int ev_fd;
-+	struct wl_event_source *event_source;
-+};
-+
-+/**
-+ * Create a new synchronization timeline.
-+ */
-+struct wlr_drm_syncobj_timeline *wlr_drm_syncobj_timeline_create(int drm_fd);
-+/**
-+ * Import a timeline from a drm_syncobj FD.
-+ */
-+struct wlr_drm_syncobj_timeline *wlr_drm_syncobj_timeline_import(int drm_fd,
-+	int drm_syncobj_fd);
-+/**
-+ * Reference a synchronization timeline.
-+ */
-+struct wlr_drm_syncobj_timeline *wlr_drm_syncobj_timeline_ref(struct wlr_drm_syncobj_timeline *timeline);
-+/**
-+ * Unreference a synchronization timeline.
-+ */
-+void wlr_drm_syncobj_timeline_unref(struct wlr_drm_syncobj_timeline *timeline);
+@@ -62,6 +62,17 @@ struct wlr_drm_syncobj_timeline *wlr_drm_syncobj_timeline_ref(struct wlr_drm_syn
+  * Unreference a synchronization timeline.
+  */
+ void wlr_drm_syncobj_timeline_unref(struct wlr_drm_syncobj_timeline *timeline);
 +/**
 + * Export a drm_syncobj FD from a timeline.
 + */
@@ -824,54 +721,9 @@ index 0000000000000000000000000000000000000000..6dcc244661705ed2210c5b0d974eb3f1
 + */
 +bool wlr_drm_syncobj_timeline_transfer(struct wlr_drm_syncobj_timeline *dst,
 +	uint64_t dst_point, struct wlr_drm_syncobj_timeline *src, uint64_t src_point);
-+/**
-+ * Check if a timeline point has been signalled or has materialized.
-+ *
-+ * Flags can be:
-+ *
-+ * - DRM_SYNCOBJ_WAIT_FLAGS_WAIT_FOR_SUBMIT to wait for the point to be
-+ *   signalled
-+ * - DRM_SYNCOBJ_WAIT_FLAGS_WAIT_AVAILABLE to only wait for a fence to
-+ *   materialize
-+ */
-+bool wlr_drm_syncobj_timeline_check(struct wlr_drm_syncobj_timeline *timeline,
-+	uint64_t point, uint32_t flags, bool *result);
-+/**
-+ * Asynchronously wait for a timeline point.
-+ *
-+ * See wlr_drm_syncobj_timeline_check() for a definition of flags.
-+ */
-+bool wlr_drm_syncobj_timeline_waiter_init(struct wlr_drm_syncobj_timeline_waiter *waiter,
-+	struct wlr_drm_syncobj_timeline *timeline, uint64_t point, uint32_t flags,
-+	struct wl_event_loop *loop);
-+/**
-+ * Cancel a timeline waiter.
-+ */
-+void wlr_drm_syncobj_timeline_waiter_finish(struct wlr_drm_syncobj_timeline_waiter *waiter);
-+/**
-+ * Export a timeline point as a sync_file FD.
-+ *
-+ * The returned sync_file will be signalled when the provided point is
-+ * signalled on the timeline.
-+ *
-+ * This allows inter-operation with other APIs which don't support drm_syncobj
-+ * yet. The synchronization point needs to have already materialized:
-+ * wait-before-signal is not supported.
-+ */
-+int wlr_drm_syncobj_timeline_export_sync_file(struct wlr_drm_syncobj_timeline *timeline,
-+	uint64_t src_point);
-+/**
-+ * Import a timeline point from a sync_file FD.
-+ *
-+ * The provided timeline point will be signalled when the provided sync_file is.
-+ *
-+ * This allows inter-operation with other APIs which don't support drm_syncobj
-+ * yet.
-+ */
-+bool wlr_drm_syncobj_timeline_import_sync_file(struct wlr_drm_syncobj_timeline *timeline,
-+	uint64_t dst_point, int sync_file_fd);
-+
-+#endif
+ /**
+  * Check if a timeline point has been signalled or has materialized.
+  *
 diff --git a/include/wlr/render/pass.h b/include/wlr/render/pass.h
 index 66480f7f7d05e859118fd2f7219a6d7de808b2ec..aae797dab7c101e66d32aa3e36930e7eab914dc8 100644
 --- a/include/wlr/render/pass.h
@@ -932,56 +784,13 @@ index bb9a55fcf6d654a31913e913929ab009521fd835..4a8ccd3981572f075f02a2ef15229b04
  
  	// private state
 diff --git a/include/wlr/types/wlr_linux_drm_syncobj_v1.h b/include/wlr/types/wlr_linux_drm_syncobj_v1.h
-new file mode 100644
-index 0000000000000000000000000000000000000000..1a29a0d8f1522bd3e74f9f84bf072c5bd1b1fb06
---- /dev/null
+index c6e0617b1cbec77a93eebf119c4c992a868c1f09..1a29a0d8f1522bd3e74f9f84bf072c5bd1b1fb06 100644
+--- a/include/wlr/types/wlr_linux_drm_syncobj_v1.h
 +++ b/include/wlr/types/wlr_linux_drm_syncobj_v1.h
-@@ -0,0 +1,55 @@
-+/*
-+ * This an unstable interface of wlroots. No guarantees are made regarding the
-+ * future consistency of this API.
-+ */
-+#ifndef WLR_USE_UNSTABLE
-+#error "Add -DWLR_USE_UNSTABLE to enable unstable wlroots features"
-+#endif
-+
-+#ifndef WLR_TYPES_WLR_LINUX_DRM_SYNCOBJ_V1_H
-+#define WLR_TYPES_WLR_LINUX_DRM_SYNCOBJ_V1_H
-+
-+#include <wayland-server-core.h>
-+#include <wlr/util/addon.h>
-+
-+struct wlr_linux_drm_syncobj_surface_v1_state {
-+	struct wlr_drm_syncobj_timeline *acquire_timeline;
-+	uint64_t acquire_point;
-+
-+	struct wlr_drm_syncobj_timeline *release_timeline;
-+	uint64_t release_point;
-+};
-+
-+struct wlr_linux_drm_syncobj_manager_v1 {
-+	struct wl_global *global;
-+
-+	// private state
-+
-+	int drm_fd;
-+
-+	struct wl_listener display_destroy;
-+};
-+
-+/**
-+ * Advertise explicit synchronization support to clients.
-+ *
-+ * The compositor must be prepared to handle fences coming from clients and to
-+ * send release fences correctly. In particular, both the renderer and the
-+ * backend need to support explicit synchronization.
-+ */
-+struct wlr_linux_drm_syncobj_manager_v1 *wlr_linux_drm_syncobj_manager_v1_create(
-+	struct wl_display *display, uint32_t version, int drm_fd);
-+
-+struct wlr_linux_drm_syncobj_surface_v1_state *wlr_linux_drm_syncobj_v1_get_surface_state(
-+	struct wlr_surface *surface);
-+
+@@ -43,4 +43,13 @@ struct wlr_linux_drm_syncobj_manager_v1 *wlr_linux_drm_syncobj_manager_v1_create
+ struct wlr_linux_drm_syncobj_surface_v1_state *wlr_linux_drm_syncobj_v1_get_surface_state(
+ 	struct wlr_surface *surface);
+ 
 +/**
 + * Signal the release point when wlr_buffer.events.release is emitted.
 + *
@@ -991,7 +800,7 @@ index 0000000000000000000000000000000000000000..1a29a0d8f1522bd3e74f9f84bf072c5b
 +bool wlr_linux_drm_syncobj_v1_state_signal_release_with_buffer(
 +	struct wlr_linux_drm_syncobj_surface_v1_state *state, struct wlr_buffer *buffer);
 +
-+#endif
+ #endif
 diff --git a/include/wlr/types/wlr_output.h b/include/wlr/types/wlr_output.h
 index d349f8ffa7b7bdb5168d4df3e3b1f4f39a4893c7..aaf4255b67451aaab369f68dfbf84c15afe18611 100644
 --- a/include/wlr/types/wlr_output.h
@@ -1103,93 +912,14 @@ index a8fc21595ff62372333d7af3f4a442ec11280660..9d6d4ba676ca97bc9155fac7cad06f5b
  /**
   * Add a viewport for the specified output to the scene-graph.
   *
-diff --git a/protocol/meson.build b/protocol/meson.build
-index c60f2b9a38bd7e94492d40898960be09e5ca9fe3..a424366d1662493030c7fe95bb614071475d1cef 100644
---- a/protocol/meson.build
-+++ b/protocol/meson.build
-@@ -27,6 +27,7 @@ protocols = {
- 	'ext-idle-notify-v1': wl_protocol_dir / 'staging/ext-idle-notify/ext-idle-notify-v1.xml',
- 	'ext-session-lock-v1': wl_protocol_dir / 'staging/ext-session-lock/ext-session-lock-v1.xml',
- 	'fractional-scale-v1': wl_protocol_dir / 'staging/fractional-scale/fractional-scale-v1.xml',
-+	'linux-drm-syncobj-v1': wl_protocol_dir / 'staging/linux-drm-syncobj/linux-drm-syncobj-v1.xml',
- 	'security-context-v1': wl_protocol_dir / 'staging/security-context/security-context-v1.xml',
- 	'single-pixel-buffer-v1': wl_protocol_dir / 'staging/single-pixel-buffer/single-pixel-buffer-v1.xml',
- 	'xdg-activation-v1': wl_protocol_dir / 'staging/xdg-activation/xdg-activation-v1.xml',
 diff --git a/render/drm_syncobj.c b/render/drm_syncobj.c
-new file mode 100644
-index 0000000000000000000000000000000000000000..f7120df309eb0c793f86dc498c85af03169fadad
---- /dev/null
+index af3e79fcda7b8684663ffb9009f64443509d3fbb..f7120df309eb0c793f86dc498c85af03169fadad 100644
+--- a/render/drm_syncobj.c
 +++ b/render/drm_syncobj.c
-@@ -0,0 +1,234 @@
-+#include <assert.h>
-+#include <xf86drm.h>
-+#include <stdlib.h>
-+#include <unistd.h>
-+#include <wayland-server-core.h>
-+#include <wlr/render/drm_syncobj.h>
-+#include <wlr/util/log.h>
-+
-+#include "config.h"
-+
-+#if HAVE_EVENTFD
-+#include <sys/eventfd.h>
-+#endif
-+
-+struct wlr_drm_syncobj_timeline *wlr_drm_syncobj_timeline_create(int drm_fd) {
-+	struct wlr_drm_syncobj_timeline *timeline = calloc(1, sizeof(*timeline));
-+	if (timeline == NULL) {
-+		return NULL;
-+	}
-+	timeline->drm_fd = drm_fd;
-+	timeline->n_refs = 1;
-+
-+	if (drmSyncobjCreate(drm_fd, 0, &timeline->handle) != 0) {
-+		wlr_log_errno(WLR_ERROR, "drmSyncobjCreate failed");
-+		free(timeline);
-+		return NULL;
-+	}
-+
-+	return timeline;
-+}
-+
-+struct wlr_drm_syncobj_timeline *wlr_drm_syncobj_timeline_import(int drm_fd,
-+		int drm_syncobj_fd) {
-+	struct wlr_drm_syncobj_timeline *timeline = calloc(1, sizeof(*timeline));
-+	if (timeline == NULL) {
-+		return NULL;
-+	}
-+	timeline->drm_fd = drm_fd;
-+	timeline->n_refs = 1;
-+
-+	if (drmSyncobjFDToHandle(drm_fd, drm_syncobj_fd, &timeline->handle) != 0) {
-+		wlr_log_errno(WLR_ERROR, "drmSyncobjFDToHandle failed");
-+		free(timeline);
-+		return NULL;
-+	}
-+
-+	return timeline;
-+}
-+
-+struct wlr_drm_syncobj_timeline *wlr_drm_syncobj_timeline_ref(struct wlr_drm_syncobj_timeline *timeline) {
-+	timeline->n_refs++;
-+	return timeline;
-+}
-+
-+void wlr_drm_syncobj_timeline_unref(struct wlr_drm_syncobj_timeline *timeline) {
-+	if (timeline == NULL) {
-+		return;
-+	}
-+
-+	assert(timeline->n_refs > 0);
-+	timeline->n_refs--;
-+	if (timeline->n_refs > 0) {
-+		return;
-+	}
-+
-+	drmSyncobjDestroy(timeline->drm_fd, timeline->handle);
-+	free(timeline);
-+}
-+
+@@ -67,6 +67,28 @@ void wlr_drm_syncobj_timeline_unref(struct wlr_drm_syncobj_timeline *timeline) {
+ 	free(timeline);
+ }
+ 
 +int wlr_drm_syncobj_timeline_export(struct wlr_drm_syncobj_timeline *timeline) {
 +	int drm_syncobj_fd = -1;
 +	if (drmSyncobjHandleToFD(timeline->drm_fd, timeline->handle, &drm_syncobj_fd) != 0) {
@@ -1212,149 +942,9 @@ index 0000000000000000000000000000000000000000..f7120df309eb0c793f86dc498c85af03
 +	return true;
 +}
 +
-+int wlr_drm_syncobj_timeline_export_sync_file(struct wlr_drm_syncobj_timeline *timeline,
-+		uint64_t src_point) {
-+	int sync_file_fd = -1;
-+
-+	uint32_t syncobj_handle;
-+	if (drmSyncobjCreate(timeline->drm_fd, 0, &syncobj_handle) != 0) {
-+		wlr_log_errno(WLR_ERROR, "drmSyncobjCreate failed");
-+		return -1;
-+	}
-+
-+	if (drmSyncobjTransfer(timeline->drm_fd, syncobj_handle, 0,
-+			timeline->handle, src_point, 0) != 0) {
-+		wlr_log_errno(WLR_ERROR, "drmSyncobjTransfer failed");
-+		goto out;
-+	}
-+
-+	if (drmSyncobjExportSyncFile(timeline->drm_fd,
-+			syncobj_handle, &sync_file_fd) != 0) {
-+		wlr_log_errno(WLR_ERROR, "drmSyncobjExportSyncFile failed");
-+		goto out;
-+	}
-+
-+out:
-+	drmSyncobjDestroy(timeline->drm_fd, syncobj_handle);
-+	return sync_file_fd;
-+}
-+
-+bool wlr_drm_syncobj_timeline_import_sync_file(struct wlr_drm_syncobj_timeline *timeline,
-+		uint64_t dst_point, int sync_file_fd) {
-+	bool ok = false;
-+
-+	uint32_t syncobj_handle;
-+	if (drmSyncobjCreate(timeline->drm_fd, 0, &syncobj_handle) != 0) {
-+		wlr_log_errno(WLR_ERROR, "drmSyncobjCreate failed");
-+		return -1;
-+	}
-+
-+	if (drmSyncobjImportSyncFile(timeline->drm_fd, syncobj_handle,
-+			sync_file_fd) != 0) {
-+		wlr_log_errno(WLR_ERROR, "drmSyncobjImportSyncFile failed");
-+		goto out;
-+	}
-+
-+	if (drmSyncobjTransfer(timeline->drm_fd, timeline->handle, dst_point,
-+			syncobj_handle, 0, 0) != 0) {
-+		wlr_log_errno(WLR_ERROR, "drmSyncobjTransfer failed");
-+		goto out;
-+	}
-+
-+	ok = true;
-+
-+out:
-+	drmSyncobjDestroy(timeline->drm_fd, syncobj_handle);
-+	return ok;
-+}
-+
-+bool wlr_drm_syncobj_timeline_check(struct wlr_drm_syncobj_timeline *timeline,
-+		uint64_t point, uint32_t flags, bool *result) {
-+	int etime;
-+#if defined(__FreeBSD__)
-+	etime = ETIMEDOUT;
-+#else
-+	etime = ETIME;
-+#endif
-+
-+	uint32_t signaled_point;
-+	int ret = drmSyncobjTimelineWait(timeline->drm_fd, &timeline->handle, &point, 1, 0, flags, &signaled_point);
-+	if (ret != 0 && ret != -etime) {
-+		wlr_log_errno(WLR_ERROR, "drmSyncobjWait() failed");
-+		return false;
-+	}
-+
-+	*result = ret == 0;
-+	return true;
-+}
-+
-+static int handle_eventfd_ready(int ev_fd, uint32_t mask, void *data) {
-+	struct wlr_drm_syncobj_timeline_waiter *waiter = data;
-+
-+	if (mask & (WL_EVENT_HANGUP | WL_EVENT_ERROR)) {
-+		wlr_log(WLR_ERROR, "Failed to wait for render timeline: eventfd error");
-+	}
-+
-+	if (mask & WL_EVENT_READABLE) {
-+		uint64_t ev_fd_value;
-+		if (read(ev_fd, &ev_fd_value, sizeof(ev_fd_value)) <= 0) {
-+			wlr_log(WLR_ERROR, "Failed to wait for render timeline: read() failed");
-+		}
-+	}
-+
-+	wl_signal_emit_mutable(&waiter->events.ready, NULL);
-+	return 0;
-+}
-+
-+bool wlr_drm_syncobj_timeline_waiter_init(struct wlr_drm_syncobj_timeline_waiter *waiter,
-+		struct wlr_drm_syncobj_timeline *timeline, uint64_t point, uint32_t flags,
-+		struct wl_event_loop *loop) {
-+	int ev_fd;
-+#if HAVE_EVENTFD
-+	ev_fd = eventfd(0, EFD_CLOEXEC);
-+	if (ev_fd < 0) {
-+		wlr_log_errno(WLR_ERROR, "eventfd() failed");
-+	}
-+#else
-+	ev_fd = -1;
-+	wlr_log(WLR_ERROR, "eventfd() is unavailable");
-+#endif
-+	if (ev_fd < 0) {
-+		return NULL;
-+	}
-+
-+	struct drm_syncobj_eventfd syncobj_eventfd = {
-+		.handle = timeline->handle,
-+		.flags = flags,
-+		.point = point,
-+		.fd = ev_fd,
-+	};
-+	if (drmIoctl(timeline->drm_fd, DRM_IOCTL_SYNCOBJ_EVENTFD, &syncobj_eventfd) != 0) {
-+		wlr_log_errno(WLR_ERROR, "DRM_IOCTL_SYNCOBJ_EVENTFD failed");
-+		close(ev_fd);
-+		return NULL;
-+	}
-+
-+	struct wl_event_source *source = wl_event_loop_add_fd(loop, ev_fd, WL_EVENT_READABLE, handle_eventfd_ready, waiter);
-+	if (source == NULL) {
-+		wlr_log(WLR_ERROR, "Failed to add FD to event loop");
-+		close(ev_fd);
-+		return NULL;
-+	}
-+
-+	*waiter = (struct wlr_drm_syncobj_timeline_waiter){
-+		.ev_fd = ev_fd,
-+		.event_source = source,
-+	};
-+	wl_signal_init(&waiter->events.ready);
-+	return true;
-+}
-+
-+void wlr_drm_syncobj_timeline_waiter_finish(struct wlr_drm_syncobj_timeline_waiter *waiter) {
-+	wl_list_remove(&waiter->events.ready.listener_list);
-+	wl_event_source_remove(waiter->event_source);
-+	close(waiter->ev_fd);
-+}
+ int wlr_drm_syncobj_timeline_export_sync_file(struct wlr_drm_syncobj_timeline *timeline,
+ 		uint64_t src_point) {
+ 	int sync_file_fd = -1;
 diff --git a/render/egl.c b/render/egl.c
 index 19868ca84e95eb1e122f149b3f7fdf1396752da8..ce0c95d914e7f6a115b94680cba554606dc90a45 100644
 --- a/render/egl.c
@@ -1584,39 +1174,6 @@ index 4694b2a8f8aa4151c305a976222f10227611b20d..3eeb1ba9c199ddd7a26ead06ba502efb
  	return &renderer->wlr_renderer;
  
  error:
-diff --git a/render/meson.build b/render/meson.build
-index e3c5f5350a56ecd7fce6fb8d7c948c167f782efd..f7d9f4208890a43f595312a863fefe7677aace9e 100644
---- a/render/meson.build
-+++ b/render/meson.build
-@@ -9,6 +9,7 @@ wlr_files += files(
- 	'color.c',
- 	'dmabuf.c',
- 	'drm_format_set.c',
-+	'drm_syncobj.c',
- 	'pass.c',
- 	'pixel_format.c',
- 	'swapchain.c',
-@@ -22,6 +23,8 @@ else
- 	wlr_files += files('dmabuf_fallback.c')
- endif
- 
-+internal_config.set10('HAVE_EVENTFD', cc.has_header('sys/eventfd.h'))
-+
- if 'gles2' in renderers or 'auto' in renderers
- 	egl = dependency('egl', required: 'gles2' in renderers)
- 	gbm = dependency('gbm', required: 'gles2' in renderers)
-diff --git a/types/meson.build b/types/meson.build
-index 9ea0d5402dec1ac1766634c69d368ee05e5caf29..ec70d4b7c26122d7a920decf098320a50550af4c 100644
---- a/types/meson.build
-+++ b/types/meson.build
-@@ -55,6 +55,7 @@ wlr_files += files(
- 	'wlr_keyboard_shortcuts_inhibit_v1.c',
- 	'wlr_layer_shell_v1.c',
- 	'wlr_linux_dmabuf_v1.c',
-+	'wlr_linux_drm_syncobj_v1.c',
- 	'wlr_matrix.c',
- 	'wlr_output_layer.c',
- 	'wlr_output_layout.c',
 diff --git a/types/output/cursor.c b/types/output/cursor.c
 index 4d5a3706190859f21ee3848b4069d6b3dd201950..144305b9bcdc40d194b627da2dd18d11b5581802 100644
 --- a/types/output/cursor.c
@@ -1729,7 +1286,7 @@ index 818f4549e9245968a4f6093eb3165bee5a493e45..1c9a007796aa4906d2f61c820a4e0ac5
  }
  
 diff --git a/types/output/state.c b/types/output/state.c
-index 0909b3e8ac15927c2e94c9c80028dee16fcadaf6..0e3ee03e8bf09b3c7155337ea6e70c9d11ae0a03 100644
+index 0909b3e8ac15927c2e94c9c80028dee16fcadaf6..465b54adac05d40195101eaf253ffa88de79e3ce 100644
 --- a/types/output/state.c
 +++ b/types/output/state.c
 @@ -1,5 +1,6 @@
@@ -1748,7 +1305,7 @@ index 0909b3e8ac15927c2e94c9c80028dee16fcadaf6..0e3ee03e8bf09b3c7155337ea6e70c9d
  }
  
  void wlr_output_state_set_enabled(struct wlr_output_state *state,
-@@ -114,6 +117,22 @@ void wlr_output_state_set_layers(struct wlr_output_state *state,
+@@ -114,16 +117,36 @@ void wlr_output_state_set_layers(struct wlr_output_state *state,
  	state->layers_len = layers_len;
  }
  
@@ -1771,7 +1328,22 @@ index 0909b3e8ac15927c2e94c9c80028dee16fcadaf6..0e3ee03e8bf09b3c7155337ea6e70c9d
  bool wlr_output_state_copy(struct wlr_output_state *dst,
  		const struct wlr_output_state *src) {
  	struct wlr_output_state copy = *src;
-@@ -142,6 +161,15 @@ bool wlr_output_state_copy(struct wlr_output_state *dst,
+ 	copy.committed &= ~(WLR_OUTPUT_STATE_BUFFER |
+ 		WLR_OUTPUT_STATE_DAMAGE |
+-		WLR_OUTPUT_STATE_GAMMA_LUT);
++		WLR_OUTPUT_STATE_GAMMA_LUT |
++		WLR_OUTPUT_STATE_WAIT_TIMELINE |
++		WLR_OUTPUT_STATE_SIGNAL_TIMELINE);
+ 	copy.buffer = NULL;
+ 	pixman_region32_init(&copy.damage);
+ 	copy.gamma_lut = NULL;
+ 	copy.gamma_lut_size = 0;
++	copy.wait_timeline = NULL;
++	copy.signal_timeline = NULL;
+ 
+ 	if (src->committed & WLR_OUTPUT_STATE_BUFFER) {
+ 		wlr_output_state_set_buffer(&copy, src->buffer);
+@@ -142,6 +165,15 @@ bool wlr_output_state_copy(struct wlr_output_state *dst,
  		}
  	}
  
@@ -1831,7 +1403,7 @@ index e0f61f510687f27271bc26942e41c4eb667e737e..a974619371d68272544319008e723729
  
  static void handle_scene_surface_surface_commit(
 diff --git a/types/scene/wlr_scene.c b/types/scene/wlr_scene.c
-index da851bf310ff0197cf9be1c5b34465e867de2971..03b01368a2103c3d0160327813c997f22f78ddd0 100644
+index e3e49584d85953c0262ccc889f0f9506a5a362cb..866772be0626e318184c3bef241371775e8af278 100644
 --- a/types/scene/wlr_scene.c
 +++ b/types/scene/wlr_scene.c
 @@ -3,6 +3,7 @@
@@ -1912,7 +1484,7 @@ index da851bf310ff0197cf9be1c5b34465e867de2971..03b01368a2103c3d0160327813c997f2
  
  	if (!wlr_output_test_state(scene_output->output, &pending)) {
  		wlr_output_state_finish(&pending);
-@@ -1875,10 +1902,13 @@ bool wlr_scene_output_build_state(struct wlr_scene_output *scene_output,
+@@ -1879,10 +1906,13 @@ bool wlr_scene_output_build_state(struct wlr_scene_output *scene_output,
  		timer->pre_render_duration = timespec_to_nsec(&duration);
  	}
  
@@ -1926,7 +1498,7 @@ index da851bf310ff0197cf9be1c5b34465e867de2971..03b01368a2103c3d0160327813c997f2
  	});
  	if (render_pass == NULL) {
  		wlr_buffer_unlock(buffer);
-@@ -1985,6 +2015,11 @@ bool wlr_scene_output_build_state(struct wlr_scene_output *scene_output,
+@@ -1989,6 +2019,11 @@ bool wlr_scene_output_build_state(struct wlr_scene_output *scene_output,
  	wlr_output_state_set_buffer(state, buffer);
  	wlr_buffer_unlock(buffer);
  
@@ -1986,480 +1558,13 @@ index 77ab2fb708f22169ce3dfd12aca1726873d14ec8..a2489fbd115657d59451ea841e9261af
  		if (output_cursor->output_cursor->visible) {
  			wlr_surface_send_enter(surface, output);
 diff --git a/types/wlr_linux_drm_syncobj_v1.c b/types/wlr_linux_drm_syncobj_v1.c
-new file mode 100644
-index 0000000000000000000000000000000000000000..bc2c79dc70eea06b9cf13d7ddc2e2d6c276a3f99
---- /dev/null
+index 82ace2d78b037381107e37754da98a282432ea60..bc2c79dc70eea06b9cf13d7ddc2e2d6c276a3f99 100644
+--- a/types/wlr_linux_drm_syncobj_v1.c
 +++ b/types/wlr_linux_drm_syncobj_v1.c
-@@ -0,0 +1,506 @@
-+#include <assert.h>
-+#include <fcntl.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <unistd.h>
-+#include <wlr/render/drm_syncobj.h>
-+#include <wlr/types/wlr_compositor.h>
-+#include <wlr/types/wlr_linux_drm_syncobj_v1.h>
-+#include <wlr/util/log.h>
-+#include <xf86drm.h>
-+#include "config.h"
-+#include "linux-drm-syncobj-v1-protocol.h"
-+
-+#define LINUX_DRM_SYNCOBJ_V1_VERSION 1
-+
-+struct wlr_linux_drm_syncobj_surface_v1 {
-+	struct wl_resource *resource;
-+	struct wlr_surface *surface;
-+	struct wlr_linux_drm_syncobj_surface_v1_state pending, current;
-+
-+	struct wlr_addon addon;
-+	struct wlr_surface_synced synced;
-+
-+	struct wl_listener client_commit;
-+};
-+
-+struct wlr_linux_drm_syncobj_surface_v1_commit {
-+	struct wlr_linux_drm_syncobj_surface_v1 *surface;
-+	struct wlr_drm_syncobj_timeline_waiter waiter;
-+	uint32_t cached_seq;
-+
-+	struct wl_listener waiter_ready;
-+	struct wl_listener surface_destroy;
-+};
-+
-+static const struct wp_linux_drm_syncobj_manager_v1_interface manager_impl;
-+static const struct wp_linux_drm_syncobj_timeline_v1_interface timeline_impl;
-+static const struct wp_linux_drm_syncobj_surface_v1_interface surface_impl;
-+
-+static struct wlr_linux_drm_syncobj_manager_v1 *manager_from_resource(
-+		struct wl_resource *resource) {
-+	assert(wl_resource_instance_of(resource,
-+		&wp_linux_drm_syncobj_manager_v1_interface, &manager_impl));
-+	return wl_resource_get_user_data(resource);
-+}
-+
-+static struct wlr_drm_syncobj_timeline *timeline_from_resource(
-+		struct wl_resource *resource) {
-+	assert(wl_resource_instance_of(resource,
-+		&wp_linux_drm_syncobj_timeline_v1_interface, &timeline_impl));
-+	return wl_resource_get_user_data(resource);
-+}
-+
-+// Returns NULL if the syncobj surface is inert
-+static struct wlr_linux_drm_syncobj_surface_v1 *surface_from_resource(
-+		struct wl_resource *resource) {
-+	assert(wl_resource_instance_of(resource,
-+		&wp_linux_drm_syncobj_surface_v1_interface, &surface_impl));
-+	return wl_resource_get_user_data(resource);
-+}
-+
-+static void timeline_handle_resource_destroy(struct wl_resource *resource) {
-+	struct wlr_drm_syncobj_timeline *timeline = timeline_from_resource(resource);
-+	wlr_drm_syncobj_timeline_unref(timeline);
-+}
-+
-+static void timeline_handle_destroy(struct wl_client *client,
-+		struct wl_resource *resource) {
-+	wl_resource_destroy(resource);
-+}
-+
-+static const struct wp_linux_drm_syncobj_timeline_v1_interface timeline_impl = {
-+	.destroy = timeline_handle_destroy,
-+};
-+
-+static void surface_destroy(struct wlr_linux_drm_syncobj_surface_v1 *surface) {
-+	if (surface == NULL) {
-+		return;
-+	}
-+	wl_list_remove(&surface->client_commit.link);
-+	wlr_addon_finish(&surface->addon);
-+	wlr_surface_synced_finish(&surface->synced);
-+	wl_resource_set_user_data(surface->resource, NULL);
-+	free(surface);
-+}
-+
-+static void surface_handle_destroy(struct wl_client *client,
-+		struct wl_resource *resource) {
-+	wl_resource_destroy(resource);
-+}
-+
-+static void surface_handle_set_acquire_point(struct wl_client *client,
-+		struct wl_resource *resource, struct wl_resource *timeline_resource,
-+		uint32_t point_hi, uint32_t point_lo) {
-+	struct wlr_linux_drm_syncobj_surface_v1 *surface =
-+		surface_from_resource(resource);
-+	if (surface == NULL) {
-+		wl_resource_post_error(resource,
-+			WP_LINUX_DRM_SYNCOBJ_SURFACE_V1_ERROR_NO_SURFACE,
-+			"The surface has been destroyed");
-+		return;
-+	}
-+
-+	struct wlr_drm_syncobj_timeline *timeline =
-+		timeline_from_resource(timeline_resource);
-+	uint64_t point = (uint64_t)point_hi << 32 | point_lo;
-+
-+	wlr_drm_syncobj_timeline_unref(surface->pending.acquire_timeline);
-+	surface->pending.acquire_timeline = wlr_drm_syncobj_timeline_ref(timeline);
-+	surface->pending.acquire_point = point;
-+}
-+
-+static void surface_handle_set_release_point(struct wl_client *client,
-+		struct wl_resource *resource, struct wl_resource *timeline_resource,
-+		uint32_t point_hi, uint32_t point_lo) {
-+	struct wlr_linux_drm_syncobj_surface_v1 *surface =
-+		surface_from_resource(resource);
-+	if (surface == NULL) {
-+		wl_resource_post_error(resource,
-+			WP_LINUX_DRM_SYNCOBJ_SURFACE_V1_ERROR_NO_SURFACE,
-+			"The surface has been destroyed");
-+		return;
-+	}
-+
-+	struct wlr_drm_syncobj_timeline *timeline =
-+		timeline_from_resource(timeline_resource);
-+	uint64_t point = (uint64_t)point_hi << 32 | point_lo;
-+
-+	wlr_drm_syncobj_timeline_unref(surface->pending.release_timeline);
-+	surface->pending.release_timeline = wlr_drm_syncobj_timeline_ref(timeline);
-+	surface->pending.release_point = point;
-+}
-+
-+static const struct wp_linux_drm_syncobj_surface_v1_interface surface_impl = {
-+	.destroy = surface_handle_destroy,
-+	.set_acquire_point = surface_handle_set_acquire_point,
-+	.set_release_point = surface_handle_set_release_point,
-+};
-+
-+static void surface_handle_resource_destroy(struct wl_resource *resource) {
-+	struct wlr_linux_drm_syncobj_surface_v1 *surface =
-+		surface_from_resource(resource);
-+	surface_destroy(surface);
-+}
-+
-+static void surface_addon_handle_surface_destroy(struct wlr_addon *addon) {
-+	struct wlr_linux_drm_syncobj_surface_v1 *surface =
-+		wl_container_of(addon, surface, addon);
-+	surface_destroy(surface);
-+}
-+
-+static const struct wlr_addon_interface surface_addon_impl = {
-+	.name = "wp_linux_drm_syncobj_surface_v1",
-+	.destroy = surface_addon_handle_surface_destroy,
-+};
-+
-+static void surface_synced_finish_state(void *_state) {
-+	struct wlr_linux_drm_syncobj_surface_v1_state *state = _state;
-+	wlr_drm_syncobj_timeline_unref(state->acquire_timeline);
-+	wlr_drm_syncobj_timeline_unref(state->release_timeline);
-+}
-+
-+static void surface_synced_move_state(void *_dst, void *_src) {
-+	struct wlr_linux_drm_syncobj_surface_v1_state *dst = _dst, *src = _src;
-+	// TODO: immediately signal dst.release_timeline if necessary
-+	surface_synced_finish_state(dst);
-+	*dst = *src;
-+	*src = (struct wlr_linux_drm_syncobj_surface_v1_state){0};
-+}
-+
-+static const struct wlr_surface_synced_impl surface_synced_impl = {
-+	.state_size = sizeof(struct wlr_linux_drm_syncobj_surface_v1_state),
-+	.finish_state = surface_synced_finish_state,
-+	.move_state = surface_synced_move_state,
-+};
-+
-+static void manager_handle_destroy(struct wl_client *client,
-+		struct wl_resource *resource) {
-+	wl_resource_destroy(resource);
-+}
-+
-+static struct wlr_linux_drm_syncobj_surface_v1 *surface_from_wlr_surface(
-+		struct wlr_surface *wlr_surface) {
-+	struct wlr_addon *addon =
-+		wlr_addon_find(&wlr_surface->addons, NULL, &surface_addon_impl);
-+	if (addon == NULL) {
-+		return NULL;
-+	}
-+	struct wlr_linux_drm_syncobj_surface_v1 *surface =
-+		wl_container_of(addon, surface, addon);
-+	return surface;
-+}
-+
-+static void surface_commit_destroy(struct wlr_linux_drm_syncobj_surface_v1_commit *commit) {
-+	wlr_surface_unlock_cached(commit->surface->surface, commit->cached_seq);
-+	wl_list_remove(&commit->surface_destroy.link);
-+	wl_list_remove(&commit->waiter_ready.link);
-+	wlr_drm_syncobj_timeline_waiter_finish(&commit->waiter);
-+	free(commit);
-+}
-+
-+static void surface_commit_handle_waiter_ready(struct wl_listener *listener, void *data) {
-+	struct wlr_linux_drm_syncobj_surface_v1_commit *commit =
-+		wl_container_of(listener, commit, waiter_ready);
-+	surface_commit_destroy(commit);
-+}
-+
-+static void surface_commit_handle_surface_destroy(struct wl_listener *listener,
-+		void *data) {
-+	struct wlr_linux_drm_syncobj_surface_v1_commit *commit =
-+		wl_container_of(listener, commit, surface_destroy);
-+	surface_commit_destroy(commit);
-+}
-+
-+// Block the surface commit until the fence materializes
-+static bool lock_surface_commit(struct wlr_linux_drm_syncobj_surface_v1 *surface,
-+		struct wlr_drm_syncobj_timeline *timeline, uint64_t point) {
-+	uint32_t flags = DRM_SYNCOBJ_WAIT_FLAGS_WAIT_AVAILABLE;
-+
-+	bool already_materialized = false;
-+	if (!wlr_drm_syncobj_timeline_check(timeline, point, flags, &already_materialized)) {
-+		return false;
-+	} else if (already_materialized) {
-+		return true;
-+	}
-+
-+	struct wlr_linux_drm_syncobj_surface_v1_commit *commit = calloc(1, sizeof(*commit));
-+	if (commit == NULL) {
-+		return false;
-+	}
-+
-+	struct wl_client *client = wl_resource_get_client(surface->resource);
-+	struct wl_display *display = wl_client_get_display(client);
-+	struct wl_event_loop *loop = wl_display_get_event_loop(display);
-+	if (!wlr_drm_syncobj_timeline_waiter_init(&commit->waiter, timeline, point,
-+			flags, loop)) {
-+		free(commit);
-+		return false;
-+	}
-+
-+	commit->surface = surface;
-+	commit->cached_seq = wlr_surface_lock_pending(surface->surface);
-+
-+	commit->waiter_ready.notify = surface_commit_handle_waiter_ready;
-+	wl_signal_add(&commit->waiter.events.ready, &commit->waiter_ready);
-+
-+	commit->surface_destroy.notify = surface_commit_handle_surface_destroy;
-+	wl_signal_add(&surface->surface->events.destroy, &commit->surface_destroy);
-+
-+	return true;
-+}
-+
-+static void surface_handle_client_commit(struct wl_listener *listener,
-+		void *data) {
-+	struct wlr_linux_drm_syncobj_surface_v1 *surface =
-+		wl_container_of(listener, surface, client_commit);
-+
-+	if (surface->pending.acquire_timeline != NULL &&
-+			surface->surface->pending.buffer == NULL) {
-+		wlr_surface_reject_pending(surface->surface, surface->resource,
-+			WP_LINUX_DRM_SYNCOBJ_SURFACE_V1_ERROR_NO_BUFFER,
-+			"Acquire point set but no buffer attached");
-+		return;
-+	}
-+	if (surface->pending.release_timeline != NULL &&
-+			surface->surface->pending.buffer == NULL) {
-+		wlr_surface_reject_pending(surface->surface, surface->resource,
-+			WP_LINUX_DRM_SYNCOBJ_SURFACE_V1_ERROR_NO_BUFFER,
-+			"Release point set but no buffer attached");
-+		return;
-+	}
-+
-+	if (surface->pending.acquire_timeline == NULL &&
-+			surface->surface->pending.buffer != NULL) {
-+		wlr_surface_reject_pending(surface->surface, surface->resource,
-+			WP_LINUX_DRM_SYNCOBJ_SURFACE_V1_ERROR_NO_ACQUIRE_POINT,
-+			"Buffer attached but no acquire point set");
-+		return;
-+	}
-+	if (surface->pending.release_timeline == NULL &&
-+			surface->surface->pending.buffer != NULL) {
-+		wlr_surface_reject_pending(surface->surface, surface->resource,
-+			WP_LINUX_DRM_SYNCOBJ_SURFACE_V1_ERROR_NO_RELEASE_POINT,
-+			"Buffer attached but no release point set");
-+		return;
-+	}
-+
-+	if (surface->pending.acquire_timeline != NULL &&
-+			surface->pending.release_timeline != NULL &&
-+			surface->pending.acquire_timeline == surface->pending.release_timeline &&
-+			surface->pending.acquire_point >= surface->pending.release_point) {
-+		wlr_surface_reject_pending(surface->surface, surface->resource,
-+			WP_LINUX_DRM_SYNCOBJ_SURFACE_V1_ERROR_CONFLICTING_POINTS,
-+			"Acquire and release points conflict");
-+		return;
-+	}
-+
-+	if (surface->pending.acquire_timeline != NULL && !lock_surface_commit(
-+			surface, surface->pending.acquire_timeline, surface->pending.acquire_point)) {
-+		wl_resource_post_no_memory(surface->resource);
-+		return;
-+	}
-+}
-+
-+static void manager_handle_get_surface(struct wl_client *client,
-+		struct wl_resource *resource, uint32_t id,
-+		struct wl_resource *surface_resource) {
-+	struct wlr_surface *wlr_surface = wlr_surface_from_resource(surface_resource);
-+
-+	if (surface_from_wlr_surface(wlr_surface) != NULL) {
-+		wl_resource_post_error(resource,
-+			WP_LINUX_DRM_SYNCOBJ_MANAGER_V1_ERROR_SURFACE_EXISTS,
-+			"wp_linux_drm_syncobj_surface_v1 already created for this surface");
-+		return;
-+	}
-+
-+	struct wlr_linux_drm_syncobj_surface_v1 *surface = calloc(1, sizeof(*surface));
-+	if (surface == NULL) {
-+		wl_resource_post_no_memory(resource);
-+		return;
-+	}
-+
-+	if (!wlr_surface_synced_init(&surface->synced, wlr_surface,
-+			&surface_synced_impl, &surface->pending, &surface->current)) {
-+		goto error_surface;
-+	}
-+
-+	uint32_t version = wl_resource_get_version(resource);
-+	surface->resource = wl_resource_create(client,
-+		&wp_linux_drm_syncobj_surface_v1_interface, version, id);
-+	if (surface->resource == NULL) {
-+		goto error_surface_synced;
-+	}
-+	wl_resource_set_implementation(surface->resource,
-+		&surface_impl, surface, surface_handle_resource_destroy);
-+
-+	surface->surface = wlr_surface;
-+
-+	surface->client_commit.notify = surface_handle_client_commit;
-+	wl_signal_add(&wlr_surface->events.client_commit, &surface->client_commit);
-+
-+	wlr_addon_init(&surface->addon, &wlr_surface->addons, NULL, &surface_addon_impl);
-+
-+	return;
-+
-+error_surface_synced:
-+	wlr_surface_synced_finish(&surface->synced);
-+error_surface:
-+	free(surface);
-+	wl_resource_post_no_memory(resource);
-+}
-+
-+static void manager_handle_import_timeline(struct wl_client *client,
-+		struct wl_resource *resource, uint32_t id, int drm_syncobj_fd) {
-+	struct wlr_linux_drm_syncobj_manager_v1 *manager =
-+		manager_from_resource(resource);
-+
-+	struct wlr_drm_syncobj_timeline *timeline =
-+		wlr_drm_syncobj_timeline_import(manager->drm_fd, drm_syncobj_fd);
-+	close(drm_syncobj_fd);
-+	if (timeline == NULL) {
-+		wl_resource_post_error(resource,
-+			WP_LINUX_DRM_SYNCOBJ_MANAGER_V1_ERROR_INVALID_TIMELINE,
-+			"Failed to import drm_syncobj timeline");
-+		return;
-+	}
-+
-+	uint32_t version = wl_resource_get_version(resource);
-+	struct wl_resource *timeline_resource = wl_resource_create(client,
-+		&wp_linux_drm_syncobj_timeline_v1_interface, version, id);
-+	if (timeline_resource == NULL) {
-+		wl_resource_post_no_memory(resource);
-+		return;
-+	}
-+	wl_resource_set_implementation(timeline_resource,
-+		&timeline_impl, timeline, timeline_handle_resource_destroy);
-+}
-+
-+static const struct wp_linux_drm_syncobj_manager_v1_interface manager_impl = {
-+	.destroy = manager_handle_destroy,
-+	.get_surface = manager_handle_get_surface,
-+	.import_timeline = manager_handle_import_timeline,
-+};
-+
-+static void manager_bind(struct wl_client *client, void *data,
-+		uint32_t version, uint32_t id) {
-+	struct wlr_linux_drm_syncobj_manager_v1 *manager = data;
-+
-+	struct wl_resource *resource = wl_resource_create(client,
-+		&wp_linux_drm_syncobj_manager_v1_interface, version, id);
-+	if (resource == NULL) {
-+		wl_client_post_no_memory(client);
-+		return;
-+	}
-+	wl_resource_set_implementation(resource, &manager_impl, manager, NULL);
-+}
-+
-+static void handle_display_destroy(struct wl_listener *listener, void *data) {
-+	struct wlr_linux_drm_syncobj_manager_v1 *manager =
-+		wl_container_of(listener, manager, display_destroy);
-+	wl_list_remove(&manager->display_destroy.link);
-+	wl_global_destroy(manager->global);
-+	close(manager->drm_fd);
-+	free(manager);
-+}
-+
-+static bool check_syncobj_eventfd(int drm_fd) {
-+	if (!HAVE_EVENTFD) {
-+		return false;
-+	}
-+
-+	uint64_t value = 0;
-+	if (drmGetCap(drm_fd, DRM_CAP_SYNCOBJ_TIMELINE, &value) != 0 || value == 0) {
-+		return false;
-+	}
-+
-+	// Try waiting with invalid syncobj should fail with ENOENT
-+	struct drm_syncobj_eventfd syncobj_eventfd = {
-+		.handle = 0,
-+		.fd = -1,
-+	};
-+	return drmIoctl(drm_fd, DRM_IOCTL_SYNCOBJ_EVENTFD, &syncobj_eventfd) != 0 && errno == ENOENT;
-+}
-+
-+struct wlr_linux_drm_syncobj_manager_v1 *wlr_linux_drm_syncobj_manager_v1_create(
-+		struct wl_display *display, uint32_t version, int drm_fd) {
-+	if (!check_syncobj_eventfd(drm_fd)) {
-+		wlr_log(WLR_INFO, "DRM syncobj eventfd unavailable, disabling linux-drm-syncobj-v1");
-+		return NULL;
-+	}
-+
-+	struct wlr_linux_drm_syncobj_manager_v1 *manager = calloc(1, sizeof(*manager));
-+	if (manager == NULL) {
-+		return NULL;
-+	}
-+
-+	manager->drm_fd = fcntl(drm_fd, F_DUPFD_CLOEXEC, 0);
-+	if (manager->drm_fd < 0) {
-+		goto error_manager;
-+	}
-+
-+	manager->global = wl_global_create(display,
-+		&wp_linux_drm_syncobj_manager_v1_interface,
-+		LINUX_DRM_SYNCOBJ_V1_VERSION, manager, manager_bind);
-+	if (manager->global == NULL) {
-+		goto error_drm_fd;
-+	}
-+
-+	manager->display_destroy.notify = handle_display_destroy;
-+	wl_display_add_destroy_listener(display, &manager->display_destroy);
-+
-+	return manager;
-+
-+error_drm_fd:
-+	close(manager->drm_fd);
-+error_manager:
-+	free(manager);
-+	return NULL;
-+}
-+
-+struct wlr_linux_drm_syncobj_surface_v1_state *
-+wlr_linux_drm_syncobj_v1_get_surface_state(struct wlr_surface *wlr_surface) {
-+	struct wlr_linux_drm_syncobj_surface_v1 *surface =
-+		surface_from_wlr_surface(wlr_surface);
-+	if (surface == NULL) {
-+		return NULL;
-+	}
-+	return &surface->current;
-+}
+@@ -467,3 +467,40 @@ wlr_linux_drm_syncobj_v1_get_surface_state(struct wlr_surface *wlr_surface) {
+ 	}
+ 	return &surface->current;
+ }
 +
 +struct release_signaller {
 +	struct wlr_drm_syncobj_timeline *timeline;
@@ -2498,7 +1603,5 @@ index 0000000000000000000000000000000000000000..bc2c79dc70eea06b9cf13d7ddc2e2d6c
 +	return true;
 +}
 -- 
-2.45.1
-
-
+2.45.2
 
