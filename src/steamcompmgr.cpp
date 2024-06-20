@@ -945,7 +945,7 @@ float			currentFrameRate;
 static bool		debugFocus = false;
 static bool		drawDebugInfo = false;
 static bool		debugEvents = false;
-bool			steamMode = false;
+extern bool		steamMode;
 
 gamescope::ConVar<bool> cv_composite_force{ "composite_force", false, "Force composition always, never use scanout" };
 static bool		useXRes = true;
@@ -7164,7 +7164,7 @@ void update_edid_prop()
 	}
 }
 
-bool g_bLaunchMangoapp = false;
+extern bool g_bLaunchMangoapp;
 
 void
 steamcompmgr_main(int argc, char **argv)
@@ -7199,9 +7199,6 @@ steamcompmgr_main(int argc, char **argv)
 				break;
 			case 'v':
 				drawDebugInfo = true;
-				break;
-			case 'e':
-				steamMode = true;
 				break;
 			case 'c':
 				cv_composite_force = true;
@@ -7249,8 +7246,6 @@ steamcompmgr_main(int argc, char **argv)
 					g_reshade_technique_idx = atoi(optarg);
 				} else if (strcmp(opt_name, "mura-map") == 0) {
 					set_mura_overlay(optarg);
-				} else if (strcmp(opt_name, "mangoapp") == 0) {
-					g_bLaunchMangoapp = true;
 				}
 				break;
 			case '?':
