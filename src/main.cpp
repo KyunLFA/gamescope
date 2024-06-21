@@ -26,6 +26,8 @@
 #include "convar.h"
 #include "gpuvis_trace_utils.h"
 #include "Utils/TempFiles.h"
+#include "Utils/Version.h"
+#include "defer.hpp"
 
 #include "backends.h"
 #include "refresh_rate.h"
@@ -49,6 +51,7 @@ int g_nCursorScaleHeight = -1;
 
 const struct option *gamescope_options = (struct option[]){
 	{ "help", no_argument, nullptr, 0 },
+	{ "version", no_argument, nullptr, 0 },
 	{ "nested-width", required_argument, nullptr, 'w' },
 	{ "nested-height", required_argument, nullptr, 'h' },
 	{ "nested-refresh", required_argument, nullptr, 'r' },
@@ -556,6 +559,7 @@ static bool CheckWaylandPresentationTime()
 	wl_display_roundtrip(display);
 
 	wl_registry_destroy(registry);
+	wl_display_disconnect(display);
 
     return g_bSupportsWaylandPresentationTime;
 }
@@ -697,6 +701,8 @@ int main(int argc, char **argv)
 
 	gamescope::GamescopeBackend eCurrentBackend = gamescope::GamescopeBackend::Auto;
 
+	gamescope::PrintVersion();
+
 	int o;
 	int opt_index = -1;
 	while ((o = getopt_long(argc, argv, gamescope_optstring, gamescope_options, &opt_index)) != -1)
@@ -753,6 +759,9 @@ int main(int argc, char **argv)
 				if (strcmp(opt_name, "help") == 0) {
 					fprintf(stderr, "%s", usage);
 					return 0;
+				} else if (strcmp(opt_name, "version") == 0) {
+					// We always print the version to stderr anyway.
+					return 0;
 				} else if (strcmp(opt_name, "debug-layers") == 0) {
 					g_bDebugLayers = true;
 				} else if (strcmp(opt_name, "disable-color-management") == 0) {
@@ -806,41 +815,44 @@ int main(int argc, char **argv)
 	}
 
 #if defined(__linux__) && HAVE_LIBCAP
-	cap_t caps = cap_get_proc();
-	if ( caps != nullptr )
 	{
-		cap_flag_value_t nicecapvalue = CAP_CLEAR;
-		cap_get_flag( caps, CAP_SYS_NICE, CAP_EFFECTIVE, &nicecapvalue );
-
-		if ( nicecapvalue == CAP_SET )
+		cap_t pCaps = cap_get_proc();
+		defer( cap_free( pCaps ) );
+		if ( pCaps )
 		{
-			g_bNiceCap = true;
+			cap_flag_value_t nicecapvalue = CAP_CLEAR;
+			cap_get_flag( pCaps, CAP_SYS_NICE, CAP_EFFECTIVE, &nicecapvalue );
 
-			errno = 0;
-			int nOldNice = nice( 0 );
-			if ( nOldNice != -1 && errno == 0 )
+			if ( nicecapvalue == CAP_SET )
 			{
-				g_nOldNice = nOldNice;
-			}
+				g_bNiceCap = true;
 
-			errno = 0;
-			int nNewNice = nice( -20 );
-			if ( nNewNice != -1 && errno == 0 )
-			{
-				g_nNewNice = nNewNice;
-			}
-			if ( g_bRt )
-			{
-				struct sched_param sched;
-				sched_getparam(0, &sched);
-				sched.sched_priority = sched_get_priority_min(SCHED_RR);
-
-				if (pthread_getschedparam(pthread_self(), &g_nOldPolicy, &g_schedOldParam)) {
-					fprintf(stderr, "Failed to get old scheduling parameters: %s", strerror(errno));
-					exit(1);
+				errno = 0;
+				int nOldNice = nice( 0 );
+				if ( nOldNice != -1 && errno == 0 )
+				{
+					g_nOldNice = nOldNice;
 				}
-				if (sched_setscheduler(0, SCHED_RR, &sched))
-					fprintf(stderr, "Failed to set realtime: %s", strerror(errno));
+
+				errno = 0;
+				int nNewNice = nice( -20 );
+				if ( nNewNice != -1 && errno == 0 )
+				{
+					g_nNewNice = nNewNice;
+				}
+				if ( g_bRt )
+				{
+					struct sched_param sched;
+					sched_getparam(0, &sched);
+					sched.sched_priority = sched_get_priority_min(SCHED_RR);
+
+					if (pthread_getschedparam(pthread_self(), &g_nOldPolicy, &g_schedOldParam)) {
+						fprintf(stderr, "Failed to get old scheduling parameters: %s", strerror(errno));
+						exit(1);
+					}
+					if (sched_setscheduler(0, SCHED_RR, &sched))
+						fprintf(stderr, "Failed to set realtime: %s", strerror(errno));
+				}
 			}
 		}
 	}

@@ -593,7 +593,10 @@ static void handle_wl_surface_destroy( struct wl_listener *l, void *data )
 	}
 
 	for (auto& feedback : surf->pending_presentation_feedbacks)
+	{
 		wp_presentation_feedback_send_discarded(feedback);
+		wl_resource_destroy(feedback);
+	}
 	surf->pending_presentation_feedbacks.clear();
 
 	surf->wlr->data = nullptr;
@@ -1294,6 +1297,7 @@ void wlserver_presentation_feedback_presented( struct wlr_surface *surface, std:
 			wl_surface_info->sequence >> 32,
 			wl_surface_info->sequence & 0xffffffff,
 			flags);
+		wl_resource_destroy(feedback);
 	}
 
 	presentation_feedbacks.clear();
@@ -1922,6 +1926,9 @@ void wlserver_run(void)
         },
     };
 
+	wlserver.bWaylandServerRunning = true;
+	wlserver.bWaylandServerRunning.notify_all();
+
 	while ( !g_bShutdownWLServer )
 	{
 		int ret = poll( pollfds, 2, -1 );
@@ -1951,6 +1958,9 @@ void wlserver_run(void)
 			wlserver_unlock();
 		}
 	}
+
+	wlserver.bWaylandServerRunning = false;
+	wlserver.bWaylandServerRunning.notify_all();
 
 	{
 		std::unique_lock lock3(wlserver.xdg_commit_lock);
