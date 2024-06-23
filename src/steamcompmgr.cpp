@@ -2424,7 +2424,7 @@ paint_all(bool async)
 	}
 
 	// Draw cursor if we need to
-	if (input && !ShouldDrawCursor()) {
+	if (input && ShouldDrawCursor()) {
 		global_focus.cursor->paint(
 			input, w == input ? override : nullptr,
 			&frameInfo);
@@ -3536,7 +3536,15 @@ steamcompmgr_xdg_get_possible_focus_windows()
 {
 	std::vector< steamcompmgr_win_t* > windows;
 	for ( auto &win : g_steamcompmgr_xdg_wins )
+	{
+		// Always skip system tray icons and overlays
+		if ( win->isSysTrayIcon || win->isOverlay || win->isExternalOverlay )
+		{
+			continue;
+		}
+
 		windows.emplace_back( win.get() );
+	}
 	return windows;
 }
 
@@ -3567,8 +3575,18 @@ static std::vector< steamcompmgr_win_t* > GetGlobalPossibleFocusWindows()
 static void
 steamcompmgr_xdg_determine_and_apply_focus( const std::vector< steamcompmgr_win_t* > &vecPossibleFocusWindows )
 {
+	for ( auto &window : g_steamcompmgr_xdg_wins )
+	{
+		if (window->isOverlay)
+			g_steamcompmgr_xdg_focus.overlayWindow = window.get();
+
+		if (window->isExternalOverlay)
+			g_steamcompmgr_xdg_focus.externalOverlayWindow = window.get();
+	}
 	pick_primary_focus_and_override( &g_steamcompmgr_xdg_focus, None, vecPossibleFocusWindows, false, vecFocuscontrolAppIDs );
 }
+
+uint32_t g_focusedBaseAppId = 0;
 
 static void
 determine_and_apply_focus()
@@ -3652,6 +3670,16 @@ determine_and_apply_focus()
 	global_focus.overlayWindow = root_ctx->focus.overlayWindow;
 	global_focus.externalOverlayWindow = root_ctx->focus.externalOverlayWindow;
 	global_focus.notificationWindow = root_ctx->focus.notificationWindow;
+
+	if ( !global_focus.overlayWindow )
+	{
+		global_focus.overlayWindow = g_steamcompmgr_xdg_focus.overlayWindow;
+	}
+
+	if ( !global_focus.externalOverlayWindow )
+	{
+		global_focus.externalOverlayWindow = g_steamcompmgr_xdg_focus.externalOverlayWindow;
+	}
 
 	// Pick inputFocusWindow
 	if (global_focus.overlayWindow && global_focus.overlayWindow->inputFocusMode)
@@ -3775,6 +3803,8 @@ determine_and_apply_focus()
 		focused_display = get_win_display_name(global_focus.focusWindow);
 		focusWindow_pid = global_focus.focusWindow->pid;
 	}
+
+	g_focusedBaseAppId = (uint32_t)focusedAppId;
 
 	if ( global_focus.inputFocusWindow )
 	{
@@ -7091,6 +7121,8 @@ extern int g_nPreferredOutputHeight;
 
 static bool g_bWasFSRActive = false;
 
+bool g_bAppWantsHDRCached = false;
+
 void steamcompmgr_check_xdg(bool vblank, uint64_t vblank_idx)
 {
 	if (wlserver_xdg_dirty())
@@ -7560,16 +7592,14 @@ steamcompmgr_main(int argc, char **argv)
 
 			bool app_wants_hdr = ColorspaceIsHDR( current_app_colorspace );
 
-			static bool s_bAppWantsHDRCached = false;
-
-			if ( app_wants_hdr != s_bAppWantsHDRCached )
+			if ( app_wants_hdr != g_bAppWantsHDRCached )
 			{
 				uint32_t app_wants_hdr_prop = app_wants_hdr ? 1 : 0;
 
 				XChangeProperty(root_ctx->dpy, root_ctx->root, root_ctx->atoms.gamescopeColorAppWantsHDRFeedback, XA_CARDINAL, 32, PropModeReplace,
 						(unsigned char *)&app_wants_hdr_prop, 1 );
 
-				s_bAppWantsHDRCached = app_wants_hdr;
+				g_bAppWantsHDRCached = app_wants_hdr;
 				flush_root = true;
 			}
 
