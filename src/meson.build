@@ -104,6 +104,7 @@ src = [
   'Backends/WaylandBackend.cpp',
   'Utils/TempFiles.cpp',
   'Utils/Version.cpp',
+  'BufferMemo.cpp',
   'steamcompmgr.cpp',
   'convar.cpp',
   'commit.cpp',
