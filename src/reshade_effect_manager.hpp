@@ -5,7 +5,7 @@
 
 namespace reshadefx
 {
-    struct module;
+    struct effect_module;
 }
 
 class ReshadeUniform;
@@ -51,7 +51,7 @@ public:
     uint64_t execute(gamescope::Rc<CVulkanTexture> inImage, gamescope::Rc<CVulkanTexture> *outImage);
 
     const ReshadeEffectKey& key() const { return m_key; }
-    reshadefx::module *module() { return m_module.get(); }
+    reshadefx::effect_module *effect_module() { return m_module.get(); }
 
     gamescope::Rc<CVulkanTexture> findTexture(std::string_view name);
 
@@ -59,7 +59,7 @@ private:
     ReshadeEffectKey m_key;
     CVulkanDevice *m_device;
 
-	std::unique_ptr<reshadefx::module> m_module;
+	std::unique_ptr<reshadefx::effect_module> m_module;
     std::vector<VkPipeline> m_pipelines;
     std::vector<gamescope::OwningRc<CVulkanTexture>> m_textures;
     gamescope::OwningRc<CVulkanTexture> m_rt;

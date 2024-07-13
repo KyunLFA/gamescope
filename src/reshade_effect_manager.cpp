@@ -483,10 +483,10 @@ DataUniform::~DataUniform()
 {
 }
 
-static std::vector<std::shared_ptr<ReshadeUniform>> createReshadeUniforms(const reshadefx::module& module)
+static std::vector<std::shared_ptr<ReshadeUniform>> createReshadeUniforms(const reshadefx::effect_module& effect_module)
 {
     std::vector<std::shared_ptr<ReshadeUniform>> uniforms;
-    for (auto& uniform : module.uniforms)
+    for (auto& uniform : effect_module.uniforms)
     {
         auto sourceAnnotation = std::ranges::find_if(uniform.annotations, std::bind_front(std::equal_to{}, "source"), &reshadefx::annotation::name);
         if (sourceAnnotation == uniform.annotations.end())
@@ -839,7 +839,7 @@ bool ReshadeEffectPipeline::init(CVulkanDevice *device, const ReshadeEffectKey &
 		return false;
 	}
 
-	m_module = std::make_unique<reshadefx::module>();
+	m_module = std::make_unique<reshadefx::effect_module>();
 	codegen->write_result(*m_module);
 
 #if 0
