@@ -27,7 +27,7 @@ avif_dep = dependency('libavif', version: '>=1.0.0', required: get_option('avif_
 
 wlroots_dep = dependency(
   'wlroots',
-  version: ['>= 0.18.0', '< 0.19.0'],
+  version: ['>= 0.18.0', '< 0.21.0'],
   fallback: ['wlroots', 'wlroots'],
   default_options: ['default_library=static', 'examples=false', 'xwayland=enabled', 'backends=libinput', 'renderers=[]', 'allocators=[]', 'session=enabled'],
 )
