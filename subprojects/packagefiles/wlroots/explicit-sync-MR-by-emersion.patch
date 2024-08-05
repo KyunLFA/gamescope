@@ -1,112 +1,113 @@
 explicit-sync-ng branch from emersion (https://gitlab.freedesktop.org/emersion/wlroots/-/tree/explicit-sync-ng?ref_type=heads)
 
-commit 1f163742f38ddbde5f98903b7278004212a85176
+commit 2ab93c05a5e4ea05d2772be5683699e43fe05781
+Author: Simon Ser <contact@emersion.fr>
+Date:   Sun Aug 4 16:23:53 2024 +0200
+
+    render: add WLR_RENDER_NO_EXPLICIT_SYNC env var
+
+    This can be handy to figure out if a bug is due to explicit sync.
+
+commit 2d8ebeab45f867d268c4362b7e37acc49ee6a028
 Author: Simon Ser <contact@emersion.fr>
 Date:   Fri May 10 18:32:04 2024 +0200
 
     cursor: add support for linux-drm-syncobj-v1
 
-commit 00f1a63f1761deb69a984c6cc6e04e84c8767ea7
+commit 2b4dee944641d0cb1a6cb87ae92ec0bcb526effd
 Author: Simon Ser <contact@emersion.fr>
 Date:   Wed Apr 3 15:08:44 2024 +0200
 
     scene: add explicit synchronization for rendered buffers
 
-commit 30b6bb596c649bae6255625161b2d186c3144050
+commit 5fb259b8a9867c01104092f0fd88c7e5ffc56ba5
 Author: Simon Ser <contact@emersion.fr>
 Date:   Wed Apr 3 14:37:12 2024 +0200
 
     scene: add support for linux-drm-syncobj-v1
 
-commit 3a6f13ac7dc33f1c4fd03afdec6ca94784820c6c
+commit 86f5e15c2de312422fde61511c47008cb86633bb
 Author: Simon Ser <contact@emersion.fr>
 Date:   Fri May 10 16:46:15 2024 +0200
 
     linux-drm-syncobj-v1: add helper to signal on buffer release
 
-commit e18334ca3a570b9ef4623ad002ec07ba3e27db8e
+commit 0a6e8b881bb2b38bceab4a216c5f61c9ca8c4047
 Author: Simon Ser <contact@emersion.fr>
 Date:   Wed Apr 3 14:32:30 2024 +0200
 
     scene: add wlr_scene_buffer_set_wait_timeline()
 
-commit d7fc830602d7d216916f25f590d6bb4a593ac852
-Author: Simon Ser <contact@emersion.fr>
-Date:   Wed Oct 20 22:00:39 2021 +0200
-
-    examples/explicit-sync: new example
-
-commit 2886275b541161757cd96f18fe9c4c83c26b18ff
+commit 9d8be86a4a69cbc32e7827834347d717ad586689
 Author: Simon Ser <contact@emersion.fr>
 Date:   Tue Feb 27 18:38:12 2024 +0100
 
     render/drm_syncobj: add wlr_drm_syncobj_timeline_export()
 
-commit 79a9ecf87f8624bda0db7138d8179394a6dea9b3
+commit df1a01287d2fc3f25e71f0da3b848d1de007c0e0
 Author: Simon Ser <contact@emersion.fr>
 Date:   Thu Oct 21 15:23:20 2021 +0200
 
     render/drm_syncobj: add wlr_drm_syncobj_timeline_transfer()
 
-commit e239c03c3f34c1a1525c37884d52d9f8b7113a95
+commit 2e717d6f76b30659fb5e039766c5e0e19800346f
 Author: Simon Ser <contact@emersion.fr>
 Date:   Wed Oct 20 20:09:38 2021 +0200
 
     backend/drm: add support for explicit sync APIs
 
-commit fa514932e713ae2f42f985520b86ca2d2420a4e8
+commit c45e72513319dd7b7200bf797860cb87c218cc76
 Author: Simon Ser <contact@emersion.fr>
 Date:   Wed Oct 20 19:29:00 2021 +0200
 
     output: add explicit sync API
 
-commit 8f9401e0b98f8c83018dcdedf66c32b03383da5a
+commit bc3202baa285dd24f67b55f9827cd43dcb8571ab
 Author: Simon Ser <contact@emersion.fr>
 Date:   Mon Jul 10 16:15:59 2023 +0200
 
     render/gles2: implement explicit sync API
 
-commit 93cc3d80c7730b5cba5e06899208f075a622bfa3
+commit aa2aabe7585d55becc878aecafedaac0cd8fb38b
 Author: Simon Ser <contact@emersion.fr>
 Date:   Mon Mar 16 17:24:25 2020 +0100
 
     render/egl: add support for explicit sync extensions
 
-commit 5d80393ae3b5f6dcff8bcf7ca35d63e2acc1dce3
+commit 14239eb72d0617a634cedb0239a093c3dc92a22c
 Author: Simon Ser <contact@emersion.fr>
 Date:   Mon Jul 10 10:53:12 2023 +0200
 
     render: add explicit sync API
 ---
- backend/drm/atomic.c                         |  62 +++-
- backend/drm/drm.c                            |  10 +-
- backend/drm/properties.c                     |   2 +
- examples/explicit-sync.c                     | 298 +++++++++++++++++++
- examples/meson.build                         |   4 +
- include/backend/drm/drm.h                    |   1 +
- include/backend/drm/properties.h             |   2 +
- include/render/egl.h                         |  12 +
- include/render/gles2.h                       |   5 +-
- include/types/wlr_output.h                   |   3 +-
- include/wlr/render/drm_syncobj.h             |  11 +
- include/wlr/render/pass.h                    |  24 ++
- include/wlr/render/wlr_renderer.h            |   6 +
- include/wlr/types/wlr_linux_drm_syncobj_v1.h |   9 +
- include/wlr/types/wlr_output.h               |  38 +++
- include/wlr/types/wlr_scene.h                |   9 +
- render/drm_syncobj.c                         |  22 ++
- render/egl.c                                 |  74 +++++
- render/gles2/pass.c                          |  60 +++-
- render/gles2/renderer.c                      |   6 +-
- types/output/cursor.c                        |  21 +-
- types/output/output.c                        |  22 +-
- types/output/state.c                         |  34 ++-
- types/scene/surface.c                        |  18 ++
- types/scene/wlr_scene.c                      |  37 ++-
- types/wlr_cursor.c                           |  20 +-
- types/wlr_linux_drm_syncobj_v1.c             |  37 +++
- 27 files changed, 828 insertions(+), 19 deletions(-)
- create mode 100644 examples/explicit-sync.c
+ backend/drm/atomic.c                         | 62 +++++++++++++++-
+ backend/drm/drm.c                            | 10 ++-
+ backend/drm/properties.c                     |  2 +
+ docs/env_vars.md                             |  2 +
+ include/backend/drm/drm.h                    |  1 +
+ include/backend/drm/properties.h             |  2 +
+ include/render/egl.h                         | 12 ++++
+ include/render/gles2.h                       |  5 +-
+ include/types/wlr_output.h                   |  3 +-
+ include/wlr/render/drm_syncobj.h             | 11 +++
+ include/wlr/render/pass.h                    | 22 ++++++
+ include/wlr/render/wlr_renderer.h            |  6 ++
+ include/wlr/types/wlr_linux_drm_syncobj_v1.h |  9 +++
+ include/wlr/types/wlr_output.h               | 38 ++++++++++
+ include/wlr/types/wlr_scene.h                |  9 +++
+ render/drm_syncobj.c                         | 22 ++++++
+ render/egl.c                                 | 74 ++++++++++++++++++++
+ render/gles2/pass.c                          | 60 +++++++++++++++-
+ render/gles2/renderer.c                      |  6 +-
+ render/wlr_renderer.c                        |  3 +
+ types/output/cursor.c                        | 21 +++++-
+ types/output/output.c                        | 22 +++++-
+ types/output/state.c                         | 34 ++++++++-
+ types/scene/surface.c                        | 18 +++++
+ types/scene/wlr_scene.c                      | 37 +++++++++-
+ types/wlr_cursor.c                           | 20 +++++-
+ types/wlr_linux_drm_syncobj_v1.c             | 37 ++++++++++
+ 27 files changed, 529 insertions(+), 19 deletions(-)
 
 diff --git a/backend/drm/atomic.c b/backend/drm/atomic.c
 index 2649a1a554f033fa049e0917b9d26c033c6f1144..d3a91efbe1c2f2686b91ccad426dc4c24c9793f2 100644
@@ -228,7 +229,7 @@ index 2649a1a554f033fa049e0917b9d26c033c6f1144..d3a91efbe1c2f2686b91ccad426dc4c2
  			if (drm_connector_is_cursor_visible(conn)) {
  				set_plane_props(atom, drm, crtc->cursor, state->cursor_fb,
 diff --git a/backend/drm/drm.c b/backend/drm/drm.c
-index aaf5c4873af4a2efdce3c76adee1135c6041bf2e..442135a7ba8e9de52b26c8a2f0a231889c3eede3 100644
+index 5756f289750ce8cfa03a9cc58174e51c42a643fc..4104f87c7ae275fdcd508861182908f3118bc017 100644
 --- a/backend/drm/drm.c
 +++ b/backend/drm/drm.c
 @@ -42,7 +42,9 @@ static const uint32_t COMMIT_OUTPUT_STATE =
@@ -242,7 +243,7 @@ index aaf5c4873af4a2efdce3c76adee1135c6041bf2e..442135a7ba8e9de52b26c8a2f0a23188
  
  static const uint32_t SUPPORTED_OUTPUT_STATE =
  	WLR_OUTPUT_STATE_BACKEND_OPTIONAL | COMMIT_OUTPUT_STATE;
-@@ -579,6 +581,8 @@ static void drm_connector_state_init(struct wlr_drm_connector_state *state,
+@@ -630,6 +632,8 @@ static void drm_connector_state_init(struct wlr_drm_connector_state *state,
  		.connector = conn,
  		.base = base,
  		.active = output_pending_enabled(&conn->output, base),
@@ -251,7 +252,7 @@ index aaf5c4873af4a2efdce3c76adee1135c6041bf2e..442135a7ba8e9de52b26c8a2f0a23188
  	};
  
  	struct wlr_output_mode *mode = conn->output.current_mode;
-@@ -1554,6 +1558,10 @@ static bool connect_drm_connector(struct wlr_drm_connector *wlr_conn,
+@@ -1619,6 +1623,10 @@ static bool connect_drm_connector(struct wlr_drm_connector *wlr_conn,
  		output->non_desktop = non_desktop;
  	}
  
@@ -263,7 +264,7 @@ index aaf5c4873af4a2efdce3c76adee1135c6041bf2e..442135a7ba8e9de52b26c8a2f0a23188
  	if (wlr_conn->props.max_bpc != 0) {
  		if (!introspect_drm_prop_range(drm->fd, wlr_conn->props.max_bpc,
 diff --git a/backend/drm/properties.c b/backend/drm/properties.c
-index 9223fab6df34cf069d6ec1786d6ca95bd28ddcbf..aa957da4957adebf4ee85ec7762bd625ce6fa0a8 100644
+index d78bfaf64bff9c1c4531dc82caf1a140689646f7..05af167389a07f704b70e493a01fd3dfe1193984 100644
 --- a/backend/drm/properties.c
 +++ b/backend/drm/properties.c
 @@ -40,6 +40,7 @@ static const struct prop_info crtc_info[] = {
@@ -280,332 +281,26 @@ index 9223fab6df34cf069d6ec1786d6ca95bd28ddcbf..aa957da4957adebf4ee85ec7762bd625
  	{ "HOTSPOT_Y", INDEX(hotspot_y) },
 +	{ "IN_FENCE_FD", INDEX(in_fence_fd) },
  	{ "IN_FORMATS", INDEX(in_formats) },
+ 	{ "SIZE_HINTS", INDEX(size_hints) },
  	{ "SRC_H", INDEX(src_h) },
- 	{ "SRC_W", INDEX(src_w) },
-diff --git a/examples/explicit-sync.c b/examples/explicit-sync.c
-new file mode 100644
-index 0000000000000000000000000000000000000000..053f437ecb05d454a271b76be4e4df4754efe591
---- /dev/null
-+++ b/examples/explicit-sync.c
-@@ -0,0 +1,298 @@
-+#include <assert.h>
-+#include <getopt.h>
-+#include <stdbool.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <time.h>
-+#include <unistd.h>
-+#include <wayland-server-core.h>
-+#include <wlr/backend.h>
-+#include <wlr/render/allocator.h>
-+#include <wlr/render/swapchain.h>
-+#include <wlr/render/drm_syncobj.h>
-+#include <wlr/render/wlr_renderer.h>
-+#include <wlr/types/wlr_compositor.h>
-+#include <wlr/types/wlr_linux_drm_syncobj_v1.h>
-+#include <wlr/types/wlr_output.h>
-+#include <wlr/types/wlr_xdg_shell.h>
-+#include <wlr/util/log.h>
-+
-+/* Simple compositor with explicit synchronization support. Input is
-+ * unimplemented.
-+ *
-+ * New surfaces are stacked on top of the existing ones as they appear. */
-+
-+struct server {
-+	struct wl_display *display;
-+	struct wlr_backend *backend;
-+	struct wlr_allocator *allocator;
-+	struct wlr_renderer *renderer;
-+	struct wlr_linux_drm_syncobj_manager_v1 *drm_syncobj_manager_v1;
-+
-+	struct wl_list outputs;
-+	struct wl_list surfaces;
-+
-+	struct wl_listener new_output;
-+	struct wl_listener new_surface;
-+};
-+
-+struct surface {
-+	struct wlr_surface *wlr;
-+	struct wl_list link;
-+
-+	struct wl_listener commit;
-+	struct wl_listener destroy;
-+
-+	struct output *last_output;
-+	uint64_t last_output_point;
-+};
-+
-+struct output {
-+	struct wl_list link;
-+	struct wlr_output *wlr;
-+
-+	struct wlr_drm_syncobj_timeline *in_timeline, *out_timeline;
-+
-+	struct wl_listener frame;
-+};
-+
-+static struct server server = {0};
-+
-+static void output_handle_frame(struct wl_listener *listener, void *data) {
-+	struct output *output = wl_container_of(listener, output, frame);
-+	struct wlr_renderer *renderer = server.renderer;
-+
-+	wlr_output_configure_primary_swapchain(output->wlr, NULL, &output->wlr->swapchain);
-+
-+	uint64_t output_point = output->wlr->commit_seq;
-+	struct wlr_buffer *buffer = wlr_swapchain_acquire(output->wlr->swapchain, NULL);
-+	struct wlr_render_pass *pass = wlr_renderer_begin_buffer_pass(renderer, buffer, &(struct wlr_buffer_pass_options){
-+		.signal_timeline = output->in_timeline,
-+		.signal_point = output_point,
-+	});
-+
-+	wlr_render_pass_add_rect(pass, &(struct wlr_render_rect_options){
-+		.box = { .width = output->wlr->width, .height = output->wlr->height },
-+		.color = { 0.25, 0.25, 0.25, 1 },
-+	});
-+
-+	struct timespec now;
-+	clock_gettime(CLOCK_MONOTONIC, &now);
-+
-+	int pos = 0;
-+	struct surface *surface;
-+	wl_list_for_each(surface, &server.surfaces, link) {
-+		pos += 50;
-+
-+		struct wlr_texture *texture = wlr_surface_get_texture(surface->wlr);
-+		if (texture == NULL) {
-+			continue;
-+		}
-+
-+		struct wlr_drm_syncobj_timeline *wait_timeline = NULL;
-+		uint64_t wait_point = 0;
-+		struct wlr_linux_drm_syncobj_surface_v1_state *sync_v2_state =
-+			wlr_linux_drm_syncobj_v1_get_surface_state(surface->wlr);
-+		if (sync_v2_state != NULL) {
-+			wait_timeline = sync_v2_state->acquire_timeline;
-+			wait_point = sync_v2_state->acquire_point;
-+		} else {
-+			wlr_log(WLR_ERROR, "Client doesn't support linux-drm-syncobj-v1");
-+			continue;
-+		}
-+
-+		wlr_render_pass_add_texture(pass, &(struct wlr_render_texture_options){
-+			.texture = texture,
-+			.dst_box = { .x = pos, .y = pos },
-+			.wait_timeline = wait_timeline,
-+			.wait_point = wait_point,
-+		});
-+
-+		wlr_surface_send_frame_done(surface->wlr, &now);
-+
-+		surface->last_output = output;
-+		surface->last_output_point = output_point;
-+	}
-+
-+	wlr_render_pass_submit(pass);
-+
-+	struct wlr_output_state state;
-+	wlr_output_state_init(&state);
-+	wlr_output_state_set_buffer(&state, buffer);
-+	wlr_buffer_unlock(buffer);
-+	wlr_output_state_set_wait_timeline(&state, output->in_timeline, output_point);
-+	wlr_output_state_set_signal_timeline(&state, output->out_timeline, output_point);
-+	wlr_output_commit_state(output->wlr, &state);
-+	wlr_output_state_finish(&state);
-+
-+	wl_list_for_each(surface, &server.surfaces, link) {
-+		struct wlr_linux_drm_syncobj_surface_v1_state *sync_v2_state =
-+			wlr_linux_drm_syncobj_v1_get_surface_state(surface->wlr);
-+		if (sync_v2_state != NULL) {
-+			if (!wlr_drm_syncobj_timeline_transfer(sync_v2_state->release_timeline,
-+					sync_v2_state->release_point, output->out_timeline,
-+					output_point)) {
-+				wlr_log(WLR_ERROR, "Failed to transfer surface release timeline");
-+			}
-+		}
-+	}
-+}
-+
-+static void server_handle_new_output(struct wl_listener *listener, void *data) {
-+	struct wlr_output *wlr_output = data;
-+
-+	if (!wlr_output->timeline) {
-+		wlr_log(WLR_ERROR, "Output doesn't support timelines");
-+		return;
-+	}
-+
-+	wlr_output_init_render(wlr_output, server.allocator, server.renderer);
-+
-+	int drm_fd = wlr_renderer_get_drm_fd(server.renderer);
-+	struct wlr_drm_syncobj_timeline *in_timeline = wlr_drm_syncobj_timeline_create(drm_fd);
-+	struct wlr_drm_syncobj_timeline *out_timeline = wlr_drm_syncobj_timeline_create(drm_fd);
-+	if (in_timeline == NULL || out_timeline == NULL) {
-+		return;
-+	}
-+
-+	struct output *output = calloc(1, sizeof(*output));
-+	output->wlr = wlr_output;
-+	output->in_timeline = in_timeline;
-+	output->out_timeline = out_timeline;
-+	output->frame.notify = output_handle_frame;
-+	wl_signal_add(&wlr_output->events.frame, &output->frame);
-+	wl_list_insert(&server.outputs, &output->link);
-+
-+	struct wlr_output_state state;
-+	wlr_output_state_init(&state);
-+	wlr_output_state_set_enabled(&state, true);
-+	struct wlr_output_mode *mode = wlr_output_preferred_mode(wlr_output);
-+	if (mode != NULL) {
-+		wlr_output_state_set_mode(&state, mode);
-+	}
-+	wlr_output_commit_state(wlr_output, &state);
-+	wlr_output_state_finish(&state);
-+
-+	wlr_output_create_global(wlr_output, server.display);
-+}
-+
-+static void surface_handle_commit(struct wl_listener *listener, void *data) {
-+	struct surface *surface = wl_container_of(listener, surface, commit);
-+	if (!(surface->wlr->current.committed & WLR_SURFACE_STATE_BUFFER)) {
-+		return;
-+	}
-+	struct wlr_linux_drm_syncobj_surface_v1_state *sync_v2_state =
-+		wlr_linux_drm_syncobj_v1_get_surface_state(surface->wlr);
-+	if (sync_v2_state == NULL) {
-+		return;
-+	}
-+	// TODO: support multiple outputs
-+	struct output *output = surface->last_output;
-+	uint64_t output_point = surface->last_output_point;
-+	if (output == NULL) {
-+		return; // TODO: signal immediately
-+	}
-+	if (!wlr_drm_syncobj_timeline_transfer(sync_v2_state->release_timeline,
-+			sync_v2_state->release_point, output->out_timeline,
-+			output_point)) {
-+		wlr_log(WLR_ERROR, "Failed to transfer surface release timeline");
-+	}
-+}
-+
-+static void surface_handle_destroy(struct wl_listener *listener, void *data) {
-+	struct surface *surface = wl_container_of(listener, surface, destroy);
-+	wl_list_remove(&surface->destroy.link);
-+	wl_list_remove(&surface->commit.link);
-+	wl_list_remove(&surface->link);
-+	free(surface);
-+}
-+
-+static void server_handle_new_surface(struct wl_listener *listener,
-+		void *data) {
-+	struct wlr_surface *wlr_surface = data;
-+
-+	struct surface *surface = calloc(1, sizeof(*surface));
-+	surface->wlr = wlr_surface;
-+	surface->commit.notify = surface_handle_commit;
-+	wl_signal_add(&wlr_surface->events.commit, &surface->commit);
-+	surface->destroy.notify = surface_handle_destroy;
-+	wl_signal_add(&wlr_surface->events.destroy, &surface->destroy);
-+
-+	wl_list_insert(&server.surfaces, &surface->link);
-+}
-+
-+int main(int argc, char *argv[]) {
-+	wlr_log_init(WLR_DEBUG, NULL);
-+
-+	const char *startup_cmd = NULL;
-+	int c;
-+	while ((c = getopt(argc, argv, "s:")) != -1) {
-+		switch (c) {
-+		case 's':
-+			startup_cmd = optarg;
-+			break;
-+		default:
-+			printf("usage: %s [-s startup-command]\n", argv[0]);
-+			return EXIT_FAILURE;
-+		}
-+	}
-+	if (optind < argc) {
-+		printf("usage: %s [-s startup-command]\n", argv[0]);
-+		return EXIT_FAILURE;
-+	}
-+
-+	server.display = wl_display_create();
-+	struct wl_event_loop *loop = wl_display_get_event_loop(server.display);
-+	server.backend = wlr_backend_autocreate(loop, NULL);
-+	server.renderer = wlr_renderer_autocreate(server.backend);
-+	server.allocator = wlr_allocator_autocreate(server.backend, server.renderer);
-+	wlr_renderer_init_wl_display(server.renderer, server.display);
-+
-+	if (!server.renderer->features.timeline) {
-+		wlr_log(WLR_ERROR, "Renderer doesn't support timelines");
-+		return EXIT_FAILURE;
-+	}
-+
-+	struct wlr_compositor *compositor = wlr_compositor_create(server.display, 5, server.renderer);
-+
-+	wlr_xdg_shell_create(server.display, 2);
-+
-+	int drm_fd = wlr_renderer_get_drm_fd(server.renderer);
-+	server.drm_syncobj_manager_v1 =
-+		wlr_linux_drm_syncobj_manager_v1_create(server.display, 1, drm_fd);
-+
-+	wl_list_init(&server.outputs);
-+	wl_list_init(&server.surfaces);
-+
-+	server.new_output.notify = server_handle_new_output;
-+	wl_signal_add(&server.backend->events.new_output, &server.new_output);
-+
-+	server.new_surface.notify = server_handle_new_surface;
-+	wl_signal_add(&compositor->events.new_surface, &server.new_surface);
-+
-+	const char *socket = wl_display_add_socket_auto(server.display);
-+	if (!socket) {
-+		wl_display_destroy(server.display);
-+		return EXIT_FAILURE;
-+	}
-+
-+	if (!wlr_backend_start(server.backend)) {
-+		wl_display_destroy(server.display);
-+		return EXIT_FAILURE;
-+	}
-+
-+	setenv("WAYLAND_DISPLAY", socket, true);
-+	if (startup_cmd != NULL) {
-+		if (fork() == 0) {
-+			execl("/bin/sh", "/bin/sh", "-c", startup_cmd, (void *)NULL);
-+		}
-+	}
-+
-+	wlr_log(WLR_INFO, "Running Wayland compositor on WAYLAND_DISPLAY=%s",
-+		socket);
-+	wl_display_run(server.display);
-+
-+	wl_display_destroy_clients(server.display);
-+	wl_display_destroy(server.display);
-+	return EXIT_SUCCESS;
-+}
-diff --git a/examples/meson.build b/examples/meson.build
-index 3fe07df8e9bad495ad07069be93eb511d50c0076..a30a63da888d6f87ddf798861be506136797cb4b 100644
---- a/examples/meson.build
-+++ b/examples/meson.build
-@@ -51,6 +51,10 @@ compositors = {
- 		],
- 		'dep': [wayland_client, wayland_egl, egl, glesv2],
- 	},
-+	'explicit-sync': {
-+		'src': 'explicit-sync.c',
-+		'proto': ['xdg-shell'],
-+	},
- }
+diff --git a/docs/env_vars.md b/docs/env_vars.md
+index a2a86c84dded4367f398cd0c099378fc2c2c9e23..06e47ac5998fbd53b7c0cd9bda18c6e59e38bef8 100644
+--- a/docs/env_vars.md
++++ b/docs/env_vars.md
+@@ -12,6 +12,8 @@ wlroots reads these environment variables
+   renderers: gles2, pixman, vulkan)
+ * *WLR_RENDER_DRM_DEVICE*: specifies the DRM node to use for
+   hardware-accelerated renderers.
++* *WLR_RENDER_NO_EXPLICIT_SYNC*: set to 1 to disable explicit synchronization
++  support in renderers.
+ * *WLR_EGL_NO_MODIFIERS*: set to 1 to disable format modifiers in EGL, this can
+   be used to understand and work around driver bugs.
  
- foreach name, info : compositors
 diff --git a/include/backend/drm/drm.h b/include/backend/drm/drm.h
-index 739c7f4d3daa727b751995e602def54cc6bde079..2cf056ad7a0f894b9359b9872313c95e71a359e5 100644
+index 1106e9f56da0250fc31a4f11d61c56b7bf08a57f..18f4874202c3b49e094addc41201c3f1b2933dca 100644
 --- a/include/backend/drm/drm.h
 +++ b/include/backend/drm/drm.h
-@@ -142,6 +142,7 @@ struct wlr_drm_connector_state {
+@@ -145,6 +145,7 @@ struct wlr_drm_connector_state {
  	uint32_t mode_id;
  	uint32_t gamma_lut;
  	uint32_t fb_damage_clips;
@@ -614,7 +309,7 @@ index 739c7f4d3daa727b751995e602def54cc6bde079..2cf056ad7a0f894b9359b9872313c95e
  };
  
 diff --git a/include/backend/drm/properties.h b/include/backend/drm/properties.h
-index c039065a40866190e19f347ce0b5fbf76a0ff254..1d063f469956fe0496e2d220fa65de8c04d16c6d 100644
+index 57073702189246c9aef418974e034b420ab72c95..421eb42755b2c9275b29667cdb9baae1da504481 100644
 --- a/include/backend/drm/properties.h
 +++ b/include/backend/drm/properties.h
 @@ -38,6 +38,7 @@ struct wlr_drm_crtc_props {
@@ -625,7 +320,7 @@ index c039065a40866190e19f347ce0b5fbf76a0ff254..1d063f469956fe0496e2d220fa65de8c
  };
  
  struct wlr_drm_plane_props {
-@@ -60,6 +61,7 @@ struct wlr_drm_plane_props {
+@@ -61,6 +62,7 @@ struct wlr_drm_plane_props {
  	uint32_t fb_damage_clips;
  	uint32_t hotspot_x;
  	uint32_t hotspot_y;
@@ -720,10 +415,10 @@ index be3dce2d7652c4a2237b084375d9d8ff932312e2..bf406d8716554cc519e7dcc4a5e356c6
   * Check if a timeline point has been signalled or has materialized.
   *
 diff --git a/include/wlr/render/pass.h b/include/wlr/render/pass.h
-index 66480f7f7d05e859118fd2f7219a6d7de808b2ec..aae797dab7c101e66d32aa3e36930e7eab914dc8 100644
+index 66480f7f7d05e859118fd2f7219a6d7de808b2ec..2159bc3df74a9bebe79ee7c5c9c99410cc097df0 100644
 --- a/include/wlr/render/pass.h
 +++ b/include/wlr/render/pass.h
-@@ -33,6 +33,18 @@ struct wlr_buffer_pass_options {
+@@ -33,6 +33,17 @@ struct wlr_buffer_pass_options {
  	/* Color transform to apply to the output of the render pass,
  	 * leave NULL to indicate sRGB/no custom transform */
  	struct wlr_color_transform *color_transform;
@@ -731,8 +426,7 @@ index 66480f7f7d05e859118fd2f7219a6d7de808b2ec..aae797dab7c101e66d32aa3e36930e7e
 +	/* Signal a timeline synchronization point when the render pass completes.
 +	 *
 +	 * When a compositor provides a signal timeline, the renderer may skip
-+	 * implicit signal synchronization. Compositors are not allowed to mix
-+	 * implicit and explicit signal synchronization usage.
++	 * implicit signal synchronization.
 +	 *
 +	 * Support for this feature is advertised by features.timeline in
 +	 * struct wlr_renderer.
@@ -742,7 +436,7 @@ index 66480f7f7d05e859118fd2f7219a6d7de808b2ec..aae797dab7c101e66d32aa3e36930e7e
  };
  
  /**
-@@ -88,6 +100,18 @@ struct wlr_render_texture_options {
+@@ -88,6 +99,17 @@ struct wlr_render_texture_options {
  	enum wlr_scale_filter_mode filter_mode;
  	/* Blend mode */
  	enum wlr_render_blend_mode blend_mode;
@@ -750,8 +444,7 @@ index 66480f7f7d05e859118fd2f7219a6d7de808b2ec..aae797dab7c101e66d32aa3e36930e7e
 +	/* Wait for a timeline synchronization point before texturing.
 +	 *
 +	 * When a compositor provides a wait timeline, the renderer may skip
-+	 * implicit wait synchronization. Compositors are not allowed to mix
-+	 * implicit and explicit wait synchronization usage.
++	 * implicit wait synchronization.
 +	 *
 +	 * Support for this feature is advertised by features.timeline in
 +	 * struct wlr_renderer.
@@ -797,7 +490,7 @@ index c6e0617b1cbec77a93eebf119c4c992a868c1f09..1a29a0d8f1522bd3e74f9f84bf072c5b
 +
  #endif
 diff --git a/include/wlr/types/wlr_output.h b/include/wlr/types/wlr_output.h
-index ff675bd3403c05da5724bf9261d936d4d15a5354..3df04624cdf6323b41c38c7ce7f966002d0810dd 100644
+index ead4703966b05e821fb7bb4a0257ec053d3fff02..f32e15ef59b58a0aba696dbf5470f574f6df9adf 100644
 --- a/include/wlr/types/wlr_output.h
 +++ b/include/wlr/types/wlr_output.h
 @@ -45,6 +45,8 @@ struct wlr_output_cursor {
@@ -830,7 +523,7 @@ index ff675bd3403c05da5724bf9261d936d4d15a5354..3df04624cdf6323b41c38c7ce7f96600
  };
  
  struct wlr_output_impl;
-@@ -161,6 +170,8 @@ struct wlr_output {
+@@ -162,6 +171,8 @@ struct wlr_output {
  
  	// true for example with VR headsets
  	bool non_desktop;
@@ -839,7 +532,7 @@ index ff675bd3403c05da5724bf9261d936d4d15a5354..3df04624cdf6323b41c38c7ce7f96600
  
  	// Commit sequence number. Incremented on each commit, may overflow.
  	uint32_t commit_seq;
-@@ -541,6 +552,33 @@ void wlr_output_state_set_damage(struct wlr_output_state *state,
+@@ -536,6 +547,33 @@ void wlr_output_state_set_damage(struct wlr_output_state *state,
   */
  void wlr_output_state_set_layers(struct wlr_output_state *state,
  	struct wlr_output_layer_state *layers, size_t layers_len);
@@ -874,7 +567,7 @@ index ff675bd3403c05da5724bf9261d936d4d15a5354..3df04624cdf6323b41c38c7ce7f96600
  /**
   * Copies the output state from src to dst. It is safe to then
 diff --git a/include/wlr/types/wlr_scene.h b/include/wlr/types/wlr_scene.h
-index a8fc21595ff62372333d7af3f4a442ec11280660..9d6d4ba676ca97bc9155fac7cad06f5b30821684 100644
+index d1fbca7de4928c0466055d1f14e04219e3639749..b92e63d44ae616830d710267296cc2efa0ed58e4 100644
 --- a/include/wlr/types/wlr_scene.h
 +++ b/include/wlr/types/wlr_scene.h
 @@ -191,6 +191,9 @@ struct wlr_scene_buffer {
@@ -897,7 +590,7 @@ index a8fc21595ff62372333d7af3f4a442ec11280660..9d6d4ba676ca97bc9155fac7cad06f5b
  };
  
  struct wlr_scene_timer {
-@@ -451,6 +457,9 @@ void wlr_scene_buffer_set_filter_mode(struct wlr_scene_buffer *scene_buffer,
+@@ -454,6 +460,9 @@ void wlr_scene_buffer_set_filter_mode(struct wlr_scene_buffer *scene_buffer,
  void wlr_scene_buffer_send_frame_done(struct wlr_scene_buffer *scene_buffer,
  	struct timespec *now);
  
@@ -1169,8 +862,22 @@ index 4694b2a8f8aa4151c305a976222f10227611b20d..3eeb1ba9c199ddd7a26ead06ba502efb
  	return &renderer->wlr_renderer;
  
  error:
+diff --git a/render/wlr_renderer.c b/render/wlr_renderer.c
+index 6a28908c4809cc1c255f4c3683ddab17eea08bff..a580ab56de52c7a0e25c1c95304c0b8898921cc1 100644
+--- a/render/wlr_renderer.c
++++ b/render/wlr_renderer.c
+@@ -274,6 +274,9 @@ out:
+ 	if (own_drm_fd && drm_fd >= 0) {
+ 		close(drm_fd);
+ 	}
++	if (renderer != NULL && env_parse_bool("WLR_RENDER_NO_EXPLICIT_SYNC")) {
++		renderer->features.timeline = false;
++	}
+ 	return renderer;
+ }
+ 
 diff --git a/types/output/cursor.c b/types/output/cursor.c
-index 4d5a3706190859f21ee3848b4069d6b3dd201950..144305b9bcdc40d194b627da2dd18d11b5581802 100644
+index 2bf78528374ec6b45b86d93d60b85981f1225868..95793a39d1421c9851cc98ccdc2ec7c002666013 100644
 --- a/types/output/cursor.c
 +++ b/types/output/cursor.c
 @@ -3,6 +3,7 @@
@@ -1181,7 +888,7 @@ index 4d5a3706190859f21ee3848b4069d6b3dd201950..144305b9bcdc40d194b627da2dd18d11
  #include <wlr/render/wlr_renderer.h>
  #include <wlr/types/wlr_compositor.h>
  #include <wlr/util/log.h>
-@@ -257,6 +258,8 @@ static struct wlr_buffer *render_cursor_buffer(struct wlr_output_cursor *cursor)
+@@ -271,6 +272,8 @@ static struct wlr_buffer *render_cursor_buffer(struct wlr_output_cursor *cursor)
  		.src_box = cursor->src_box,
  		.dst_box = dst_box,
  		.transform = transform,
@@ -1190,7 +897,7 @@ index 4d5a3706190859f21ee3848b4069d6b3dd201950..144305b9bcdc40d194b627da2dd18d11
  	});
  
  	if (!wlr_render_pass_submit(pass)) {
-@@ -341,20 +344,22 @@ bool wlr_output_cursor_set_buffer(struct wlr_output_cursor *cursor,
+@@ -355,20 +358,22 @@ bool wlr_output_cursor_set_buffer(struct wlr_output_cursor *cursor,
  	hotspot_y /= cursor->output->scale;
  
  	return output_cursor_set_texture(cursor, texture, true, &src_box,
@@ -1216,7 +923,7 @@ index 4d5a3706190859f21ee3848b4069d6b3dd201950..144305b9bcdc40d194b627da2dd18d11
  	struct wlr_output *output = cursor->output;
  
  	output_cursor_reset(cursor);
-@@ -381,6 +386,15 @@ bool output_cursor_set_texture(struct wlr_output_cursor *cursor,
+@@ -395,6 +400,15 @@ bool output_cursor_set_texture(struct wlr_output_cursor *cursor,
  	cursor->texture = texture;
  	cursor->own_texture = own_texture;
  
@@ -1232,7 +939,7 @@ index 4d5a3706190859f21ee3848b4069d6b3dd201950..144305b9bcdc40d194b627da2dd18d11
  	wl_list_remove(&cursor->renderer_destroy.link);
  	if (texture != NULL) {
  		cursor->renderer_destroy.notify = output_cursor_handle_renderer_destroy;
-@@ -457,6 +471,7 @@ void wlr_output_cursor_destroy(struct wlr_output_cursor *cursor) {
+@@ -471,6 +485,7 @@ void wlr_output_cursor_destroy(struct wlr_output_cursor *cursor) {
  	if (cursor->own_texture) {
  		wlr_texture_destroy(cursor->texture);
  	}
@@ -1355,7 +1062,7 @@ index 0909b3e8ac15927c2e94c9c80028dee16fcadaf6..465b54adac05d40195101eaf253ffa88
  	*dst = copy;
  	return true;
 diff --git a/types/scene/surface.c b/types/scene/surface.c
-index e0f61f510687f27271bc26942e41c4eb667e737e..a974619371d68272544319008e723729f9549c13 100644
+index 1905b4dfb5ac74cd482e180ef16ad4ece4e8efc3..91a7a95fd6cf741a9f1cc6efdf9cc63d8397d62d 100644
 --- a/types/scene/surface.c
 +++ b/types/scene/surface.c
 @@ -4,6 +4,7 @@
@@ -1366,7 +1073,7 @@ index e0f61f510687f27271bc26942e41c4eb667e737e..a974619371d68272544319008e723729
  #include <wlr/types/wlr_presentation_time.h>
  #include <wlr/util/transform.h>
  #include "types/wlr_scene.h"
-@@ -140,6 +141,7 @@ static void surface_reconfigure(struct wlr_scene_surface *scene_surface) {
+@@ -142,6 +143,7 @@ static void surface_reconfigure(struct wlr_scene_surface *scene_surface) {
  
  	if (width <= 0 || height <= 0) {
  		wlr_scene_buffer_set_buffer(scene_buffer, NULL);
@@ -1374,7 +1081,7 @@ index e0f61f510687f27271bc26942e41c4eb667e737e..a974619371d68272544319008e723729
  		pixman_region32_fini(&opaque);
  		return;
  	}
-@@ -169,6 +171,22 @@ static void surface_reconfigure(struct wlr_scene_surface *scene_surface) {
+@@ -171,6 +173,22 @@ static void surface_reconfigure(struct wlr_scene_surface *scene_surface) {
  	}
  
  	pixman_region32_fini(&opaque);
@@ -1398,7 +1105,7 @@ index e0f61f510687f27271bc26942e41c4eb667e737e..a974619371d68272544319008e723729
  
  static void handle_scene_surface_surface_commit(
 diff --git a/types/scene/wlr_scene.c b/types/scene/wlr_scene.c
-index e3e49584d85953c0262ccc889f0f9506a5a362cb..866772be0626e318184c3bef241371775e8af278 100644
+index 46768aabe174288b0fb211d10e1d5032bc0dadbc..e0af6f72789fcf9b4e5ec976d20b5d87bb1d6bf7 100644
 --- a/types/scene/wlr_scene.c
 +++ b/types/scene/wlr_scene.c
 @@ -3,6 +3,7 @@
@@ -1469,7 +1176,7 @@ index e3e49584d85953c0262ccc889f0f9506a5a362cb..866772be0626e318184c3bef24137177
  	wl_array_release(&scene_output->render_list);
  	free(scene_output);
  }
-@@ -1669,6 +1693,9 @@ static bool scene_entry_try_direct_scanout(struct render_list_entry *entry,
+@@ -1672,6 +1696,9 @@ static bool scene_entry_try_direct_scanout(struct render_list_entry *entry,
  	}
  
  	wlr_output_state_set_buffer(&pending, buffer->buffer);
@@ -1479,7 +1186,7 @@ index e3e49584d85953c0262ccc889f0f9506a5a362cb..866772be0626e318184c3bef24137177
  
  	if (!wlr_output_test_state(scene_output->output, &pending)) {
  		wlr_output_state_finish(&pending);
-@@ -1879,10 +1906,13 @@ bool wlr_scene_output_build_state(struct wlr_scene_output *scene_output,
+@@ -1883,10 +1910,13 @@ bool wlr_scene_output_build_state(struct wlr_scene_output *scene_output,
  		timer->pre_render_duration = timespec_to_nsec(&duration);
  	}
  
@@ -1493,7 +1200,7 @@ index e3e49584d85953c0262ccc889f0f9506a5a362cb..866772be0626e318184c3bef24137177
  	});
  	if (render_pass == NULL) {
  		wlr_buffer_unlock(buffer);
-@@ -1989,6 +2019,11 @@ bool wlr_scene_output_build_state(struct wlr_scene_output *scene_output,
+@@ -1993,6 +2023,11 @@ bool wlr_scene_output_build_state(struct wlr_scene_output *scene_output,
  	wlr_output_state_set_buffer(state, buffer);
  	wlr_buffer_unlock(buffer);
  
@@ -1598,5 +1305,5 @@ index 82ace2d78b037381107e37754da98a282432ea60..bc2c79dc70eea06b9cf13d7ddc2e2d6c
 +	return true;
 +}
 -- 
-2.45.2
+2.46.0
 
